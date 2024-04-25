@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tomar Foto</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    #videoElement {
+      width: 100%;
+      max-width: 500px;
+      height: auto;
+      border: 1px solid black;
+    }
+    #canvas {
+      display: none;
+      width: 100%;
+      max-width: 500px;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+  <video id="videoElement" autoplay playsinline></video>
+  <br>
+  <button id="captureBtn">Tomar Foto</button>
+  <canvas id="canvas"></canvas>
+
+  <script>
+    const videoElement = document.getElementById('videoElement');
+    const captureBtn = document.getElementById('captureBtn');
+    const canvas = document.getElementById('canvas');
+
+    // Solicitar permiso de cámara
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+      .then(stream => {
+        videoElement.srcObject = stream;
+      })
+      .catch(error => {
+        console.error('Error al acceder a la cámara web:', error);
+      });
+
+    captureBtn.addEventListener('click', () => {
+      const context = canvas.getContext('2d');
+      canvas.width = videoElement.videoWidth;
+      canvas.height = videoElement.videoHeight;
+      context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+      canvas.style.display = 'block';
+    });
+  </script>
+</body>
+</html>

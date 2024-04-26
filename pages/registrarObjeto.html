@@ -14,7 +14,20 @@
       height: auto;
       border: 1px solid black;
     }
+    #videoObjeto {
+      width: 100%;
+      max-width: 500px;
+      height: auto;
+      border: 1px solid black;
+    }
     #canvas {
+      display: none;
+      width: 100%;
+      max-width: 500px;
+      height: auto;
+      border: 1px solid black;
+    }
+    #canvasObjeto {
       display: none;
       width: 100%;
       max-width: 500px;
@@ -38,14 +51,13 @@
 
         <div id="step2" style="display: none;">
           <h2>Paso 2: Obtención de Características del Objeto</h2>
-          <video id="videoElement" autoplay playsinline></video>
+          <video id="videoObjeto" autoplay playsinline></video>
           <br>
-          <canvas id="canvas"></canvas>
-          <button id="captureBtn" class="btn btn-primary">Tomar Foto</button>
-          <button id="retryBtn" class="btn btn-secondary" style="display: none;">Volver a Intentar</button>
-          <button id="nextBtn" class="btn btn-primary" onclick="mostrarCamara('estudiante')" style="display: none;">Siguiente</button>
+          <canvas id="canvasObjeto"></canvas>
+          <button id="captureBtnObjeto" class="btn btn-primary">Tomar Foto</button>
+          <button id="retryBtnObjeto" class="btn btn-secondary" style="display: none;">Volver a Intentar</button>
+          <button id="nextBtnObjeto" class="btn btn-primary" onclick="mostrarCamara('objeto')">Siguiente</button>
         </div>
-          <button class="btn btn-primary" onclick="mostrarCamara('objeto')">Siguiente</button>
         </div>
 
         <div id="step3" style="display: none;">
@@ -70,7 +82,9 @@
       document.getElementById('step3').style.display = 'none';
 
       if (tipo === 'estudiante') {
+        const videoElement = document.getElementById('videoElement');
         document.getElementById('step2').style.display = 'block';
+          videoElement.style.display = 'block';
       } else if (tipo === 'objeto') {
         document.getElementById('step3').style.display = 'block';
       }
@@ -79,11 +93,23 @@
 
 
 <script>
+
         const videoElement = document.getElementById('videoElement');
         const captureBtn = document.getElementById('captureBtn');
         const retryBtn = document.getElementById('retryBtn');
         const nextBtn = document.getElementById('nextBtn');
         const canvas = document.getElementById('canvas');
+
+
+
+        const videoElementObjeto = document.getElementById('videoObjeto');
+        const captureBtnObjeto = document.getElementById('captureBtnObjeto');
+        const retryBtnObjeto = document.getElementById('retryBtnObjeto');
+        const nextBtnObjeto = document.getElementById('nextBtnObjeto');
+        const canvasObjeto = document.getElementById('canvasObjeto');
+
+
+        
     
         // Solicitar permiso de cámara
         navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
@@ -93,6 +119,16 @@
           .catch(error => {
             console.error('Error al acceder a la cámara web:', error);
           });
+        
+        navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+          .then(stream => {
+            videoElementObjeto.srcObject = stream;
+          })
+          .catch(error => {
+            console.error('Error al acceder a la cámara web:', error);
+          });
+
+        
     
         captureBtn.addEventListener('click', () => {
           const context = canvas.getContext('2d');
@@ -113,6 +149,28 @@
           retryBtn.style.display = 'none';
           nextBtn.style.display = 'none';
         });
-    </script>
+        
+        captureBtnObjeto.addEventListener('click', () => {
+          const context = canvasObjeto.getContext('2d');
+          canvasObjeto.width = videoElementObjeto.videoWidth;
+          canvasObjeto.height = videoElementObjeto.videoHeight;
+          context.drawImage(videoElementObjeto, 0, 0, canvasObjeto.width, canvasObjeto.height);
+          canvasObjeto.style.display = 'block';
+          videoElementObjeto.style.display = 'none';
+          captureBtnObjeto.style.display = 'none';
+          retryBtnObjeto.style.display = 'inline-block';
+          nextBtnObjeto.style.display = 'inline-block';
+        });
+
+        retryBtnObjeto.addEventListener('click', () => {
+          videoElementObjeto.style.display = 'block';
+          canvasObjeto.style.display = 'none';
+          captureBtnObjeto.style.display = 'inline-block';
+          retryBtnObjeto.style.display = 'none';
+          nextBtnObjeto.style.display = 'none';
+        });
+
+
+        </script>
 </body>
 </html>

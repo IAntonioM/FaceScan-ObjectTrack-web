@@ -1,30 +1,52 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <title>Tomar Foto</title>
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    #videoElement {
-      width: 100%;
-      max-width: 500px;
-      height: auto;
-      border: 1px solid black;
-    }
-    #canvas {
-      display: none;
-      width: 100%;
-      max-width: 500px;
-      height: auto;
-    }
-  </style>
+  <title>Tomar Foto</title>
+  <!-- Enlace al archivo CSS de Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <title>Tomar Foto</title>
-    <a href="pages/TomarFoto.html"> Tomar Foto</a>
+  <div class="container">
+    <div class="row mt-3">
+        <div class="col-md-4 mb-4">
+            <a href="pages/registrarObjeto.html"  class="card h-md-250 border rounded overflow-hidden flex-md-row shadow-sm position-relative" style="background-color: white;">
+                <div class="card-img-top">
+                    <!-- Reemplazar 'ruta_de_la_imagen' con la ruta de tu imagen -->
+                    <img src="assets/fondoRegistrarObjetos.jpeg" alt="Imagen" width="100%" height="150" style="object-fit: cover;">
+                </div>
+                <div class="card-body d-flex flex-column position-static">
+                    <strong class="d-inline-block mb-2 text-primary">Registrar Objeto</strong>
+                </div>
+            </a>
+        </div>  
+        <div class="col-md-4 mb-4">
+            <a  href="pages/registrarSalidaObjeto.html" class="card h-md-250 border rounded overflow-hidden flex-md-row shadow-sm position-relative" style="background-color: white;">
+                <div class="card-img-top">
+                    <!-- Reemplazar 'ruta_de_la_imagen' con la ruta de tu imagen -->
+                    <img src="assets/salidaObjetos.jpg" alt="Imagen" width="100%" height="150" style="object-fit: cover;">
+                </div>
+                <div class="card-body d-flex flex-column position-static">
+                    <strong class="d-inline-block mb-2 text-primary">Marcar Salida de Objeto</strong>
+                </div>
+            </a>
+        </div>  
+        <div class="col-md-4 mb-4">
+            <a  href="pages/TomarFoto.html" class="card h-md-250 border rounded overflow-hidden flex-md-row shadow-sm position-relative" style="background-color: white;">
+                <div class="card-img-top">
+                    <!-- Reemplazar 'ruta_de_la_imagen' con la ruta de tu imagen -->
+                    <img src="assets/listaObjetos.jpg" alt="Imagen" width="100%" height="150" style="object-fit: cover;">
+                </div>
+                <div class="card-body d-flex flex-column position-static">
+                    <strong class="d-inline-block mb-2 text-primary">Historial de Objetos Registrados</strong>
+                </div>
+            </a>
+        </div>
+    </div>
+
+  <!-- Enlace al archivo JavaScript de Bootstrap (opcional) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+

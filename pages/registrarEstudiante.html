@@ -45,24 +45,19 @@
           <br>
           <canvas id="canvas"></canvas>
           <button id="captureBtn" class="btn btn-primary">Tomar Foto</button>
+          <form action="">
+            <input type="text" placeholder="Ingresar el Codigo de Estudiante"  id="codigoEstudiante">
+            <input type="text" placeholder="Ingresar sus Nombres Completos" id="NombreCompleto">
+          </form>
+          
           <button id="retryBtn" class="btn btn-secondary" style="display: none;">Volver a Intentar</button>
-          <button id="nextBtn" class="btn btn-primary" onclick="cambiarVista('estudiante')" style="display: none;">Siguiente</button>
+          <button id="registrarEstudiante" class="btn btn-primary" style="display: none;">Registrar Estudiante</button>
+          <button id="nextBtn" class="btn btn-primary" onclick="cambiarVista('resultado')" style="display: none;">Siguiente</button>
         </div>
 
         <div id="step2" style="display: none;">
-          <h2>Paso 2: Obtención de Características del Objeto</h2>
-          <video id="videoObjeto" autoplay playsinline></video>
-          <br>
-          <canvas id="canvasObjeto"></canvas>
-          <button id="captureBtnObjeto" class="btn btn-primary">Tomar Foto</button>
-          <button id="retryBtnObjeto" class="btn btn-secondary" style="display: none;">Volver a Intentar</button>
-          <button id="nextBtnObjeto" class="btn btn-primary" onclick="cambiarVista('objeto')">Siguiente</button>
-        </div>
-        </div>
-
-        <div id="step3" style="display: none;">
-          <h2>Paso 3: Registro del Objeto</h2>
-          <p>Objeto registrado correctamente a nombre del estudiante.</p>
+          <h2>Registro completo !!!</h2>
+          <p>El estudiante ya se encuentra registrado</p>
           <a href="../index.html" class="btn btn-primary" >Volver al Menu</a>
         </div>
       </div>
@@ -75,19 +70,16 @@
     function cambiarVista(tipo) {
       // Simulación de mostrar la cámara (puedes agregar tu lógica para trabajar con la cámara real aquí)
       console.log(`Mostrando cámara para ${tipo}`);
-
+    
       // Ocultar el paso actual y mostrar el siguiente
       document.getElementById('step1').style.display = 'none';
       document.getElementById('step2').style.display = 'none';
-      document.getElementById('step3').style.display = 'none';
 
-      if (tipo === 'estudiante') {
+      if (tipo === 'resultado') {
         const videoElement = document.getElementById('videoElement');
         document.getElementById('step2').style.display = 'block';
           videoElement.style.display = 'block';
-      } else if (tipo === 'objeto') {
-        document.getElementById('step3').style.display = 'block';
-      }
+      } 
     }
   </script>
 
@@ -99,15 +91,7 @@
         const retryBtn = document.getElementById('retryBtn');
         const nextBtn = document.getElementById('nextBtn');
         const canvas = document.getElementById('canvas');
-
-
-
-        const videoElementObjeto = document.getElementById('videoObjeto');
-        const captureBtnObjeto = document.getElementById('captureBtnObjeto');
-        const retryBtnObjeto = document.getElementById('retryBtnObjeto');
-        const nextBtnObjeto = document.getElementById('nextBtnObjeto');
-        const canvasObjeto = document.getElementById('canvasObjeto');
-
+        const registerEstud = document.getElementById('registrarEstudiante');
 
         
     
@@ -115,14 +99,6 @@
         navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
           .then(stream => {
             videoElement.srcObject = stream;
-          })
-          .catch(error => {
-            console.error('Error al acceder a la cámara web:', error);
-          });
-        
-        navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
-          .then(stream => {
-            videoElementObjeto.srcObject = stream;
           })
           .catch(error => {
             console.error('Error al acceder a la cámara web:', error);
@@ -140,6 +116,7 @@
           captureBtn.style.display = 'none';
           retryBtn.style.display = 'inline-block';
           nextBtn.style.display = 'inline-block';
+          registerEstud.style.display = 'inline-block';
         });
 
         retryBtn.addEventListener('click', () => {
@@ -148,27 +125,48 @@
           captureBtn.style.display = 'inline-block';
           retryBtn.style.display = 'none';
           nextBtn.style.display = 'none';
+          registerEstud.style.display = 'none';
         });
-        
-        captureBtnObjeto.addEventListener('click', () => {
-          const context = canvasObjeto.getContext('2d');
-          canvasObjeto.width = videoElementObjeto.videoWidth;
-          canvasObjeto.height = videoElementObjeto.videoHeight;
-          context.drawImage(videoElementObjeto, 0, 0, canvasObjeto.width, canvasObjeto.height);
-          canvasObjeto.style.display = 'block';
-          videoElementObjeto.style.display = 'none';
-          captureBtnObjeto.style.display = 'none';
-          retryBtnObjeto.style.display = 'inline-block';
-          nextBtnObjeto.style.display = 'inline-block';
-        });
+    function dataURItoFile(dataURI, filename) {
+        const binary = atob(dataURI.split(',')[1]);
+        const array = [];
+        for (let i = 0; i < binary.length; i++) {
+            array.push(binary.charCodeAt(i));
+        }
+        return new File([new Uint8Array(array)], filename, { type: 'image/jpeg' });
+        }
+    document.getElementById('registrarEstudiante').addEventListener('click', () => {
+        const codigoEstudiante = document.getElementById('codigoEstudiante').value;
+        const NombreCompleto = document.getElementById('NombreCompleto').value;
 
-        retryBtnObjeto.addEventListener('click', () => {
-          videoElementObjeto.style.display = 'block';
-          canvasObjeto.style.display = 'none';
-          captureBtnObjeto.style.display = 'inline-block';
-          retryBtnObjeto.style.display = 'none';
-          nextBtnObjeto.style.display = 'none';
+        const context = canvas.getContext("2d");
+        const imagenUrl=canvas.toDataURL("image/jpeg")
+        const file = dataURItoFile(imagenUrl, 'photo.jpg');
+
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('codigoEstudiante', codigoEstudiante);
+        formData.append('NombreCompleto', NombreCompleto);
+
+        // Enviar los datos al backend usando una solicitud fetch
+        fetch('https://9002-2001-1388-1e43-894a-e1d6-9b7e-737e-d889.ngrok-free.app/estudiante/reconocimiento-facial', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error en la solicitud',response);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Respuesta del servidor:', data);
+            // Aquí puedes agregar lógica adicional para manejar la respuesta del servidor, si es necesario
+        })
+        .catch(error => {
+            console.error('Error al enviar los datos:', error);
         });
+    });
 
 
         </script>

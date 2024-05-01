@@ -46,6 +46,7 @@
           <canvas id="canvas"></canvas>
           <button id="captureBtn" class="btn btn-primary">Tomar Foto</button>
           <button id="retryBtn" class="btn btn-secondary" style="display: none;">Volver a Intentar</button>
+          <button id="searchBtn" class="btn btn-primary" >Buscar Estudiante</button>
           <button id="nextBtn" class="btn btn-primary" onclick="cambiarVista('estudiante')" style="display: none;">Siguiente</button>
         </div>
 
@@ -99,6 +100,7 @@
         const retryBtn = document.getElementById('retryBtn');
         const nextBtn = document.getElementById('nextBtn');
         const canvas = document.getElementById('canvas');
+        const buscarEstud = document.getElementById('searchBtn');
 
 
 
@@ -160,15 +162,53 @@
           captureBtnObjeto.style.display = 'none';
           retryBtnObjeto.style.display = 'inline-block';
           nextBtnObjeto.style.display = 'inline-block';
+          buscarEstud.style.display = 'inline-block';
         });
 
         retryBtnObjeto.addEventListener('click', () => {
+          buscarEstud.style.display = 'none';
           videoElementObjeto.style.display = 'block';
           canvasObjeto.style.display = 'none';
           captureBtnObjeto.style.display = 'inline-block';
           retryBtnObjeto.style.display = 'none';
           nextBtnObjeto.style.display = 'none';
         });
+        function dataURItoFile(dataURI, filename) {
+            const binary = atob(dataURI.split(',')[1]);
+            const array = [];
+            for (let i = 0; i < binary.length; i++) {
+                array.push(binary.charCodeAt(i));
+            }
+            return new File([new Uint8Array(array)], filename, { type: 'image/jpeg' });
+        }
+        buscarEstud.addEventListener("click",()=>{
+
+        const context = canvas.getContext("2d");
+        const imagenUrl=canvas.toDataURL("image/jpeg")
+        const file = dataURItoFile(imagenUrl, 'photo.jpg');
+        const formData = new FormData();
+        formData.append('file', file);
+
+        // Enviar los datos al backend usando una solicitud fetch
+        fetch('https://8ced-2001-1388-1e43-df4e-d438-e769-3b31-ef17.ngrok-free.app/estudiante/reconocimiento-facial', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error en la solicitud',response);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Respuesta del servidor:', data);
+            // Aquí puedes agregar lógica adicional para manejar la respuesta del servidor, si es necesario
+        })
+        .catch(error => {
+            console.error('Error al enviar los datos:', error);
+        });
+
+        })
 
 
         </script>

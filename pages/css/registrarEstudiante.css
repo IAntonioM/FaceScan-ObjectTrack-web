@@ -1,0 +1,15 @@
+#videoElement {
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+    border: 1px solid black;
+  }
+  
+  #videoObjeto {
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+    border: 1px solid black;
+  }
+  
+  

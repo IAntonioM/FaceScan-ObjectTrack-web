@@ -161,6 +161,7 @@
         })
         .then(data => {
             console.log('Respuesta del servidor:', data);
+            cambiarVista('resultado');
             // Aquí puedes agregar lógica adicional para manejar la respuesta del servidor, si es necesario
         })
         .catch(error => {

@@ -46,6 +46,8 @@
           <canvas id="canvas"></canvas>
           <button id="captureBtn" class="btn btn-primary">Tomar Foto</button>
           <button id="retryBtn" class="btn btn-secondary" style="display: none;">Volver a Intentar</button>
+          <div class="resultado">
+          </div>
           <button id="searchBtn" class="btn btn-primary" >Buscar Estudiante</button>
           <button id="nextBtn" class="btn btn-primary" onclick="cambiarVista('estudiante')" style="display: none;">Siguiente</button>
         </div>
@@ -202,7 +204,10 @@
         })
         .then(data => {
             console.log('Respuesta del servidor:', data);
-            // Aquí puedes agregar lógica adicional para manejar la respuesta del servidor, si es necesario
+            // Selecciona el elemento con la clase 'resultado'
+            const resultadoElement = document.querySelector('.resultado');
+            // Asigna la respuesta del servidor al contenido del elemento
+            resultadoElement.textContent = JSON.stringify(data);
         })
         .catch(error => {
             console.error('Error al enviar los datos:', error);

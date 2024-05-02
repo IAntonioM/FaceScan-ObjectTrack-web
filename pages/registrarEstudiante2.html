@@ -117,7 +117,7 @@
 
       isRecording = true;
 
-      navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+      navigator.mediaDevices.getUserMedia({ video: true })
         .then(stream => {
           videoObjeto.srcObject = stream;
 

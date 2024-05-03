@@ -1,0 +1,71 @@
+/* Estilos personalizados */
+body {
+    background-image: url('../assets/fondo.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+  }
+  
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .card {
+    transition: transform 0.3s;
+    max-width: 300px;
+    height: 250px;
+  }
+  
+  .card:hover {
+    transform: scale(1.05);
+  }
+  
+  .card-img-top {
+    height: 120px;
+    object-fit: cover;
+    display: flex; /* Agregado */
+    justify-content: center; /* Agregado */
+    align-items: center; /* Agregado */
+  }
+  
+  .card-img-top img {
+    max-height: 100%; /* Agregado */
+    max-width: 100%; /* Agregado */
+  }
+  
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #f8f9fa;
+  }
+  
+  .header .username {
+    font-weight: bold;
+  }
+  
+  .header .logout-btn {
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+  }
+  
+  @media (max-width: 767px) {
+    .card-img-top {
+      height: 150px;
+    }
+  }

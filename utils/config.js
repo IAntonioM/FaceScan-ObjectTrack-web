@@ -1,1 +1,1 @@
-const BASE_URL = 'http://127.0.0.1:5000';
+const BASE_URL = 'https://a572-2001-1388-1e42-af38-6dfd-69e2-e825-ff6f.ngrok-free.app';

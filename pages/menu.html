@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tomar Foto</title>
+  <title>Menu</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="../css/menuStyle.css">
+  <link rel="stylesheet" href="../css/menu.css">
 </head>
 <body>
   <div class="header">
@@ -15,7 +15,7 @@
   <div class="container">
     <div class="row mt-3 justify-content-center">
       <div class="col-6 col-md-6 mb-4">
-        <a href="registrarObjeto.html" class="card h-md-250 border rounded overflow-hidden flex-md-row shadow-sm position-relative" style="background-color: white;">
+        <a href="registrarPertenencia.html" class="card h-md-250 border rounded overflow-hidden flex-md-row shadow-sm position-relative" style="background-color: white;">
           <div class="card-img-top">
             <img src="../assets/reg_obj.png" alt="Imagen" width="90" height="90" style="object-fit: cover;">
           </div>
@@ -56,32 +56,8 @@
       </div>
     </div>
   </div>
-  <script src="../js/validarSesionScript.js"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // Obtener el nombre de usuario de las cookies
-        var cookies = document.cookie.split(';');
-        var username = '';
-        for (var i = 0; i < cookies.length; i++) {
-            var cookie = cookies[i].trim();
-            if (cookie.startsWith('username=')) {
-                username = cookie.substring('username='.length, cookie.length);
-                break;
-            }
-        }
-
-        // Actualizar el contenido del elemento <span> con el nombre de usuario
-        document.querySelector('.username').textContent = "Usuario: "+username;
-    });
-
-function logout() {
-  // Borrar las cookies estableciendo su valor a una cadena vacía y una fecha de expiración en el pasado
-  document.cookie = 'jwt=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 UTC;';
-  document.cookie = 'username=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 UTC;';
-  // Redirigir a la página de inicio
-  window.location.href = '../index.html';
-}
-  </script>
+  <script src="../utils/sessionManager.js"></script>
+  <script src="../js/menu.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

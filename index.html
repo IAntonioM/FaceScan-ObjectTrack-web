@@ -4,64 +4,30 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Iniciar Sesión</title>
-  <link rel="stylesheet" href="css/loginStyle.css">
+  <link rel="stylesheet" href="css/login.css">
 </head>
 <body>
   <div class="container">
-    <div class="login-box">
-        <h2>Iniciar Sesión</h2>
-        <div class="form">
-            <div class="user-box">
-                <input type="text" id="username" required="">
-                <label>Usuario</label>
-            </div>
-            <div class="user-box">
-                <input type="password" id="password" required="">
-                <label>Contraseña</label>
-            </div>
-            <div class="error-message" id="error-message">
-                Usuario o contraseña incorrectos
-            </div>
-            <button onclick="login()">Ingresar</button>
-        </div>
-    </div>
-</div>
-
+      <div class="login-box">
+          <h2>Iniciar Sesión</h2>
+          <div class="form">
+              <div class="user-box">
+                  <input type="text" id="username" required="">
+                  <label>Usuario</label>
+              </div>
+              <div class="user-box">
+                  <input type="password" id="password" required="">
+                  <label>Contraseña</label>
+              </div>
+              <div class="error-message" id="error-message">
+                  Usuario o contraseña incorrectos
+              </div>
+              <button onclick="login()">Ingresar</button>
+          </div>
+      </div>
   </div>
-
-  <script>
-    function login() {
-      var username = document.getElementById('username').value;
-      var password = document.getElementById('password').value;
-
-      // Crear objeto de solicitud
-      fetch('http://127.0.0.1:5000/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ usuario: username, contraseña: password })
-      })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw new Error('Error al iniciar sesión. Por favor, verifica tus credenciales.');
-        }
-      })
-      .then(data => {
-        // Guardar el token JWT y el nombre de usuario en las cookies
-        document.cookie = `jwt=${data.access_token}; path=/`;
-        document.cookie = `username=${username}; path=/`;
-
-        // Redirigir a la página de menú
-        window.location.href = 'pages/menu.html';
-      })
-      .catch(error => {
-        document.getElementById('error-message').style.display = 'block';
-      });
-    }
-  </script>
+  <script src="js/login.js"></script>
+  <script src="utils/config.js"></script>
+  <script src="utils/sessionManager.js"></script>
 </body>
 </html>
-

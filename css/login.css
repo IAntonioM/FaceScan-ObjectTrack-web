@@ -1,4 +1,6 @@
 /* Estilos generales */
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 * {
     box-sizing: border-box;
     margin: 0;
@@ -6,13 +8,13 @@
   }
   
   body {
-    font-family: Arial, sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
     background: url('../assets/fondo.png') no-repeat center center fixed;
     background-size: cover;
+    font-family: "Montserrat", sans-serif;
   }
   
   /* Estilos del contenedor */

@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
+  validTokenSession();
   // Código para identificar al estudiante
   const videoElement = document.getElementById('videoElement');
   const searchEstudianteBtn = document.getElementById('searchEstudianteBtn');

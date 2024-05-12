@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
+  validTokenSession();
   const identificarEstudianteBtn = document.getElementById('identificarEstudianteBtn');
   const identificarObjeto1Btn = document.getElementById('identificarObjeto1Btn');
   const identificarObjeto2Btn = document.getElementById('identificarObjeto2Btn');

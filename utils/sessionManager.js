@@ -1,20 +1,22 @@
 // codigo para verificar si existe una sesion activa al cargar el Dom html
-document.addEventListener("DOMContentLoaded", function() {
+  function validTokenSession(){
     // Obtener la ruta de la página actual
     var currentPage = window.location.pathname;
   
     // Verificar si estamos en la página de inicio de sesión o en la página base
     if (currentPage !== '/index.html' && currentPage !== '/') {
-      // Verificar si las cookies jwt y username están presentes
-      var jwtCookie = getCookie('jwt');
-      var usernameCookie = getCookie('username');
-      // Si alguna de las cookies está ausente, redirigir al usuario a la página de inicio de sesión
-      if (!jwtCookie || !usernameCookie) {
-          logout();
-      }
+        // Verificar si las cookies jwt y username están presentes
+        var jwtCookie = getCookie('jwt');
+        var usernameCookie = getCookie('username');
+        // Si alguna de las cookies está ausente, redirigir al usuario a la página de inicio de sesión
+        if (!jwtCookie || !usernameCookie) {
+          // Borrar las cookies estableciendo su valor a una cadena vacía y una fecha de expiración en el pasado
+          document.cookie = 'jwt=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 UTC; Secure; SameSite=Strict';
+          document.cookie = 'username=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 UTC; Secure; SameSite=Strict';
+        }
     }
-  });
-  
+
+  }
   // Función para validar que el envio del token no este expirado o sea manipulado
   function handleUnauthorized(response) {
     if (response.status === 401 || response.status === 422) {

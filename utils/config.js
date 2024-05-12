@@ -1,1 +1,1 @@
-const BASE_URL = 'https://a572-2001-1388-1e42-af38-6dfd-69e2-e825-ff6f.ngrok-free.app';
+const BASE_URL = 'https://5892-2001-1388-1e42-af38-8d17-ba9e-d93a-a622.ngrok-free.app';

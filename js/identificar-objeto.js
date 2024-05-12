@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
+  validTokenSession();
     const videoElementObjeto = document.getElementById('videoObjeto');
     const captureBtnObjeto = document.getElementById('captureBtnObjeto');
     const retryBtnObjeto = document.getElementById('retryBtnObjeto');

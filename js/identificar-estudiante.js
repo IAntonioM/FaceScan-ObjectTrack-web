@@ -9,35 +9,35 @@ document.addEventListener('DOMContentLoaded', function() {
   const nextBtn = document.getElementById('nextBtn');
   const spinnerObjeto = document.getElementsByClassName('spinner-box')[0];
   let datosEstudiante =null;
-  let currentFacingMode = 'user';
-  let stream; // Agregar una variable para almacenar el objeto de flujo de video
+  let currentFacingMode = 'user'; // Inicializar currentFacingMode con 'user'
+  let stream;
 
   // Inicializar el acceso a las cámaras
   function getCameraAccess(videoElement, facingMode = 'environment') {
-      navigator.mediaDevices.getUserMedia({ video: { facingMode } })
-          .then(mediaStream => {
-              stream = mediaStream; // Asignar el objeto de flujo de video a la variable stream
-              videoElement.srcObject = mediaStream;
-          })
-          .catch(error => {
-              console.error('Error al acceder a la cámara web:', error);
-          });
+    navigator.mediaDevices.getUserMedia({ video: { facingMode } })
+      .then(mediaStream => {
+        stream = mediaStream;
+        videoElement.srcObject = mediaStream;
+      })
+      .catch(error => {
+        console.error('Error al acceder a la cámara web:', error);
+      });
   }
 
   // Evento para el botón de voltear la cámara
   document.getElementById('toggleCameraButton').addEventListener('click', function() {
-      // Detener el flujo de video actual
-      if (stream) {
-          stream.getTracks().forEach(track => {
-              track.stop();
-          });
-      }
+    // Detener el flujo de video actual
+    if (stream) {
+      stream.getTracks().forEach(track => {
+        track.stop();
+      });
+    }
 
-      // Cambiar la dirección de la cámara
-      currentFacingMode = currentFacingMode === 'user' ? 'environment' : 'user';
+    // Cambiar la dirección de la cámara
+    currentFacingMode = currentFacingMode === 'user' ? 'environment' : 'user';
 
-      // Volver a obtener acceso a la cámara con la nueva dirección
-      getCameraAccess(videoElement, currentFacingMode);
+    // Volver a obtener acceso a la cámara con la nueva dirección
+    getCameraAccess(videoElement, currentFacingMode);
   });
 
   // Iniciar la cámara

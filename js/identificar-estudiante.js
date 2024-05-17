@@ -7,7 +7,9 @@ document.addEventListener('DOMContentLoaded', function() {
   const canvas = document.getElementById('canvas');
   const resultadoEstudiante = document.getElementById('resultadoEstudiante');
   const nextBtn = document.getElementById('nextBtn');
+  const spinnerObjeto = document.getElementsByClassName('spinner-box')[0];
   let datosEstudiante =null;
+  let currentFacingMode = 'user';
   // Inicializar el acceso a las cámaras
   getCameraAccess(videoElement);
   function getCameraAccess(videoElement, facingMode = 'user') {
@@ -19,6 +21,12 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error('Error al acceder a la cámara web:', error);
       });
   }
+  document.getElementById('toggleCameraButton').addEventListener('click', function() {
+    // Cambiar la dirección de la cámara
+    currentFacingMode = currentFacingMode === 'user' ? 'environment' : 'user';
+    // Volver a obtener acceso a la cámara con la nueva dirección
+    getCameraAccess(videoElement, currentFacingMode);
+  });
 
   // Función para manejar el reconocimiento facial del estudiante
   function reconocimientoFacialEstudiante() {
@@ -34,12 +42,12 @@ document.addEventListener('DOMContentLoaded', function() {
       canvas.style.display = 'block';
 
       if (intentos < maxIntentos && !estudianteEncontrado) {
-        const imagenUrl = canvas.toDataURL("image/jpeg");
-        const file = dataURItoFile(imagenUrl, 'photo.jpg');
+        const imagenURI = canvas.toDataURL("image/jpeg");
+        const file = dataURItoFile(imagenURI, 'photo.jpg');
         const formData = new FormData();
         formData.append('file', file);
-
-        fetch(BASE_URL + '/estudiante/reconocimiento-facial', {
+        
+        fetch(API_URL + '/estudiante/reconocimiento-facial', {
           method: 'POST',
           headers: {
             'Authorization': 'Bearer ' + getCookie('jwt'),
@@ -47,29 +55,35 @@ document.addEventListener('DOMContentLoaded', function() {
           body: formData
         })
           .then(response => {
+            spinnerObjeto.style.display = 'flex';
             handleUnauthorized(response);
             if (response.status === 404) {
               intentos++;
               enviarFoto();
             } else if (response.ok) {
-              nextBtn.style.display = 'inline-block';
+              spinnerObjeto.style.display='none';
               estudianteEncontrado = true;
               return response.json();
             }
           })
           .then(data => {
             if (data) {
+              if(estudianteEncontrado){
+                retryBtn.style.display='inline-block';
+              }
+              const id = data.idEstudiante || 'No disponible';
               const nombres = data.Nombres || 'No disponible';
               const codigoEstudiante = data.codigoEstudiante || 'No disponible';
               const mensaje = `Nombres: ${nombres}<br>Código: ${codigoEstudiante}`;
               resultadoEstudiante.innerHTML = mensaje;
-
+              nextBtn.style.display = 'inline-block';
               // Enviar datos y redirigir al usuario
               datosEstudiante = {
                 type: 'EstudianteData',
                 payload: {
+                  id: id,
                   nombre: nombres,
-                  codigo: codigoEstudiante
+                  codigo: codigoEstudiante,
                 }
               };
             } else {
@@ -81,6 +95,8 @@ document.addEventListener('DOMContentLoaded', function() {
           });
       } else if (!estudianteEncontrado) {
         colocarEstudianteNoEncontrado(resultadoEstudiante);
+        spinnerObjeto.style.display='none';
+        retryBtn.style.display='inline-block';
       }
     };
 
@@ -96,11 +112,11 @@ document.addEventListener('DOMContentLoaded', function() {
   searchEstudianteBtn.addEventListener('click', () => {
     videoElement.style.display = 'none';
     searchEstudianteBtn.style.display = 'none';
-    retryBtn.style.display = 'inline-block';
     reconocimientoFacialEstudiante();
   });
 
   retryBtn.addEventListener('click', () => {
+    nextBtn.style.display = 'none';
     videoElement.style.display = 'block';
     canvas.style.display = 'none';
     searchEstudianteBtn.style.display = 'inline-block';

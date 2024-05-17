@@ -1,0 +1,74 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+body {
+  background-image: url('../assets/fondo.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  font-family: "Montserrat", sans-serif;
+  color: #343a40;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: #6c757d;
+  color: white;
+  margin-bottom: 20px;
+}
+
+.header .username {
+  font-weight: bold;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: rgba(248, 249, 250, 0.8);
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+#videoObjeto {
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+    border: 1px solid black;
+  }
+  #canvasObjeto {
+    display: none;
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+    border: 1px solid black;
+  }
+
+  #resultadoObjeto {
+    padding: 10px;
+    margin-top: 15px;
+    font-weight: bold;
+  }
+  
+  .btn {
+    font-size: 16px;
+    margin: 20px 0;
+  }
+  #resultadoObjeto{
+    text-align: start;
+  }
+  
+.oval-btn {
+    border-radius: 25px; /* Ajusta el valor para controlar la curvatura del óvalo */
+    padding: 8px 16px; /* Ajusta el espacio interno del botón */
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .oval-btn i {
+    margin-right: 8px; /* Ajusta el espacio entre el icono y el texto */
+  }

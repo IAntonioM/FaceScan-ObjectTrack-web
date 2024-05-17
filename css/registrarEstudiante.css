@@ -1,0 +1,61 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+body {
+    background-image: url('../assets/fondo.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    font-family: "Montserrat", sans-serif;
+}
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #f8f9fa;
+    margin-bottom: 20px;
+}
+
+.header .username {
+    font-weight: bold;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f8f9fa;
+}
+
+#videoElement {
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+    border: 1px solid black;
+  }
+  #videoObjeto {
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+    border: 1px solid black;
+  }
+  .recording-indicator {
+    width: 10px;
+    height: 10px;
+    background-color: red;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .loading-spinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-left-color: #555;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+  }
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }

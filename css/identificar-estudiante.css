@@ -1,0 +1,101 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+body {
+  background-image: url('../assets/fondo.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  font-family: "Montserrat", sans-serif;
+  color: #343a40;
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: #f8f9fa;
+}
+
+.header .titulo {
+  font-weight: bold;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+
+#videoElement {
+    width: 100%;
+    height: auto;
+    border: 1px solid black;
+    border-radius: 20px;
+}
+#canvas {
+    width: 100%;
+    height: auto;
+    border: 1px solid black;
+    display: none;
+    border-radius: 20px;
+}
+
+#resultadoEstudiante {
+  padding: 10px;
+  margin-top: 15px;
+  font-weight: bold;
+}
+
+.btn {
+  font-size: 16px;
+}
+#resultadoEstudiante{
+  text-align: start;
+}
+
+.oval-btn {
+  border-radius: 25px; /* Ajusta el valor para controlar la curvatura del óvalo */
+  padding: 8px 16px; /* Ajusta el espacio interno del botón */
+  align-items: center;
+  justify-content: center;
+}
+
+.oval-btn i {
+  margin-right: 8px; /* Ajusta el espacio entre el icono y el texto */
+}
+/* Estilo del spinner-box */
+.spinner-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+/* Estilo del texto del spinner */
+.spinner-text {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* Estilo del spinner */
+.spinner {
+  border: 8px solid #f3f3f3; /* Color gris claro para el borde */
+  border-top: 8px solid #3498db; /* Color azul para la parte superior */
+  border-radius: 50%; /* Hacer el borde redondo */
+  width: 30px; /* Ancho del spinner */
+  height: 30px; /* Altura del spinner */
+  animation: spin 2s linear infinite; /* Animación de rotación */
+}
+
+/* Definición de la animación de rotación */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

@@ -4,7 +4,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const captureBtnObjeto = document.getElementById('captureBtnObjeto');
     const retryBtnObjeto = document.getElementById('retryBtnObjeto');
     const canvasObjeto = document.getElementById('canvasObjeto');
-  
+    const nextBtn = document.getElementById('nextBtn');
+    const spinnerObjeto = document.getElementById('spinner');
+    let datosObjeto =null;
     // Obtener acceso a la cámara
     getCameraAccess(videoElementObjeto);
   
@@ -34,12 +36,12 @@ document.addEventListener('DOMContentLoaded', function() {
           const resultadoObjeto = document.getElementById('resultadoObjeto');
       
           if (intentos < maxIntentos && !objetoEncontrado) {
-            const imagenUrl = canvasObjeto.toDataURL("image/jpeg");
-            const file = dataURItoFile(imagenUrl, 'photo.jpg');
+            const imagenUri = canvasObjeto.toDataURL("image/jpeg");
+            const file = dataURItoFile(imagenUri, 'photo.jpg');
             const formData = new FormData();
             formData.append('file', file);
       
-            fetch(BASE_URL+'/objeto/reconocimiento-objeto', {
+            fetch(API_URL+'/objeto/reconocimiento-objeto', {
               method: 'POST',
               headers: {
                 'Authorization': 'Bearer ' + getCookie('jwt'),
@@ -47,23 +49,34 @@ document.addEventListener('DOMContentLoaded', function() {
               body: formData
             })
               .then(response => {
+                spinnerObjeto.style.display='inline-block';
                 if (response.status === 401 || response.status === 422) {
                   logout(); // Cerrar sesión si la solicitud no está autorizada
                 } else if (response.status === 404) {
                   intentos++;
                   enviarFoto(); // Volver a enviar la foto si el objeto no fue encontrado
                 } else if (response.ok) {
+                  nextBtn.style.display = 'inline-block';
                   objetoEncontrado = true;
                   return response.json();
                 }
               })
               .then(data => {
                 if (data) {
+                  const id = data.id || 'No disponible';
                   const objeto = data.objeto || 'No disponible';
                   const mensaje = `Objeto: ${objeto}<br>`;
                   resultadoObjeto.innerHTML = mensaje;
-                  ObjetoFrontal=objeto
-                  console.log(ObjetoFrontal)
+                // Enviar datos y redirigir al usuario
+                  datosObjeto = {
+                    type: 'ObjetoData',
+                    payload: {
+                      id: id,
+                      objeto: objeto,
+                      imgUri:imagenUri
+                    }
+                  };
+                  console.log(datosObjeto)
                   console.log("Obejto recnocido")
                 } else {
                   console.log("Obejto no recnocido")
@@ -105,4 +118,10 @@ document.addEventListener('DOMContentLoaded', function() {
         captureBtnObjeto.style.display = 'inline-block';
         retryBtnObjeto.style.display = 'none';
     });
+    nextBtn.addEventListener('click',()=>{
+      if (datosObjeto) {
+        window.opener.postMessage(datosObjeto, '*');
+        window.close(); // Opcionalmente, puedes cerrar la ventana después de enviar los datos
+      }
+    })
 });

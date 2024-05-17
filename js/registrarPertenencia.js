@@ -1,45 +1,64 @@
 document.addEventListener('DOMContentLoaded', function() {
   validTokenSession();
   const identificarEstudianteBtn = document.getElementById('identificarEstudianteBtn');
-  const identificarObjeto1Btn = document.getElementById('identificarObjeto1Btn');
-  const identificarObjeto2Btn = document.getElementById('identificarObjeto2Btn');
+  const identificarObjetoBtn = document.getElementById('identificarObjetoBtn');
   const registrarPertenenciaBtn = document.getElementById('registrarPertenenciaBtn');
   const resultDiv = document.getElementById('result');
-  let data = { estudiante: null, objeto1: null, objeto2: null };
+  let data = { estudiante: null, objeto: null,};
 
-  console.log(data);
+  // identificarEstudianteBtn.addEventListener('click', () => {
+  //   window.open('identificar-estudiante.html', '_blank');
+  // });
 
-  identificarEstudianteBtn.addEventListener('click', () => {
-    window.open('identificar-estudiante.html', '_blank');
-  });
-
-  identificarObjeto1Btn.addEventListener('click', () => {
-    window.location.href = 'identificarObjeto1.html';
-  });
-
-  identificarObjeto2Btn.addEventListener('click', () => {
-    window.location.href = 'identificarObjeto2.html';
-  });
+  // identificarObjetoBtn.addEventListener('click', () => {
+  //   window.open('identificar-objeto.html', '_blank');
+  // });
 
   registrarPertenenciaBtn.addEventListener('click', () => {
-    // Aquí puedes realizar la lógica para registrar la pertenencia utilizando los datos almacenados en `data`
-    console.log('Datos para registrar pertenencia:', data);
+    console.log(data.estudiante.id)
+    console.log(data.objeto.id)
+    const file = dataURItoFile(data.objeto.imgUri, 'photo.jpg');
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('idEstudiante', data.estudiante.id);
+    formData.append('idObjeto', data.objeto.id);
+    fetch(API_URL+'/pertenencia/registrar-pertenencia', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + getCookie('jwt'), // Reemplaza 'tuTokenJWT' con tu token JWT
+      },
+      body: formData
+    })
+      .then(response => {
+        handleUnauthorized(response);
+        if (!response.ok) {
+          throw new Error('Error en la solicitud', response);
+        }
+      })
+      .then(data => {
+        console.log('Respuesta del servidor:', data);
+      })
+      .catch(error => {
+        console.error('Error al enviar los datos:', error);
+      });
   });
 
   function showResult(title, data) {
     resultDiv.innerHTML = `<h4>${title}</h4><pre>${JSON.stringify(data, null, 2)}</pre>`;
   }
 
+  if(data.estudiante==null && data.objeto==null){
+    window.open('identificar-estudiante.html', '_blank');
+  }
   window.addEventListener('message', (event) => {
+    console.log(data);
     if (event.data.type === 'EstudianteData') {
       data.estudiante = event.data.payload;
       showResult('Datos del estudiante:', event.data.payload);
-    } else if (event.data.type === 'identificarObjeto1Data') {
-      data.objeto1 = event.data.payload;
-      showResult('Datos del objeto 1:', event.data.payload);
-    } else if (event.data.type === 'identificarObjeto2Data') {
-      data.objeto2 = event.data.payload;
-      showResult('Datos del objeto 2:', event.data.payload);
+      window.open('identificar-objeto.html', '_blank');
+    } else if (event.data.type === 'ObjetoData') {
+      data.objeto = event.data.payload;
+      showResult('Objeto Identificado:', event.data.payload);
     }
   });
 });

@@ -1,12 +1,10 @@
-document.addEventListener('DOMContentLoaded', function() {
-    validTokenSession();
-})
+
 function login() {
     var username = document.getElementById('username').value;
     var password = document.getElementById('password').value;
 
     // Crear objeto de solicitud
-    fetch(BASE_URL+'/login', {
+    fetch(API_URL+'/login', {
         method: 'POST',
         headers: {
         'Content-Type': 'application/json'
@@ -29,4 +27,8 @@ function login() {
     .catch(error => {
         document.getElementById('error-message').style.display = 'block';
     });
+}
+function saveAuth(token, username) {
+    document.cookie = `jwt=${token}; path=/; Secure; SameSite=Strict`; // Asegura la cookie y limita su alcance
+    document.cookie = `username=${username}; path=/; Secure; SameSite=Strict`; // Asegura la cookie y limita su alcance
 }

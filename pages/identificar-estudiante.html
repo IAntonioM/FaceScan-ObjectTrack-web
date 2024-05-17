@@ -11,66 +11,39 @@
   
 </head>
 <body>
-  <style>
-    #camera-container {
-    width: 100%;
-    max-width: 640px;
-    margin: 0 auto;
-}
-
-#camera-stream {
-    width: 100%;
-    max-width: 640px;
-    height: auto;
-    display: block;
-}
-  </style>
   <div class="header">
-    <div id="camera-container">
-      <video id="camera-stream" autoplay></video>
+    <span class="titulo">REGISTRAR PERTENECIA</span>
+    <button class="btn btn-secondary" id="menuBtn" onclick="menu()"> Volver </button>
   </div>
-  <button id="switch-camera">Cambiar Cámara</button>
+  <div class="container">
+    <div class="titulo_container">
+      <h4>Identificar Estudiante</h4>
+      <button id="toggleCameraButton">Voltear Cámara</button>
+    </div>
+    <video id="videoElement" autoplay playsinline></video>
+    <br>
+    <canvas id="canvas"></canvas>
+    <br>
+    <div class="spinner-box" style="display: none;">
+        <div class="spinner"></div>
+        <span class="spinner-text">Buscando</span>
+    </div>
+    <button id="searchEstudianteBtn" class="btn btn-danger oval-btn">
+      <i class="fa-solid fa-magnifying-glass"></i>Buscar
+    </button>
+    <button id="retryBtn" class="btn btn-warning" style="display: none;">Reintentar</button>
+    <div id="resultadoEstudiante">
+      
+      Sin Resultados de Busqueda
+    </div>
+    <div class="d-flex justify-content-end" style="width: 100%;">
+      <button class="btn btn-primary" id="nextBtn" style="display: none;">Siguiente >></button>
+    </div>
   </div>
-  </div>
-  <script>
-    // Elementos del DOM
-const cameraStream = document.getElementById('camera-stream');
-const switchCameraBtn = document.getElementById('switch-camera');
-
-// Variables para controlar la cámara
-let stream;
-let isFrontCamera = true;
-
-// Función para obtener la cámara
-async function getCamera() {
-    try {
-        const constraints = {
-            video: {
-                facingMode: isFrontCamera ? 'user' : 'environment'
-            }
-        };
-        stream = await navigator.mediaDevices.getUserMedia(constraints);
-        cameraStream.srcObject = stream;
-    } catch (error) {
-        console.error('Error al acceder a la cámara:', error);
-    }
-}
-
-// Función para cambiar la cámara
-function switchCamera() {
-    if (stream) {
-        stream.getTracks().forEach(track => track.stop());
-    }
-    isFrontCamera = !isFrontCamera;
-    getCamera();
-}
-
-// Iniciar la cámara
-getCamera();
-
-// Evento de clic en el botón para cambiar la cámara
-switchCameraBtn.addEventListener('click', switchCamera);
-  </script>
+  <script src="../js/identificar-estudiante.js"></script>
+  <script src="../utils/sessionManager.js"></script>
+  <script src="../utils/config.js"></script>
+  <script src="../utils/dataURItoFile.js"></script>
 </body>
 </html>
 <div>

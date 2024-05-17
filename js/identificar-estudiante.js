@@ -8,17 +8,32 @@ document.addEventListener('DOMContentLoaded', function() {
   const resultadoEstudiante = document.getElementById('resultadoEstudiante');
   const nextBtn = document.getElementById('nextBtn');
   const spinnerObjeto = document.getElementsByClassName('spinner-box')[0];
-  let datosEstudiante =null;
+  const toggleCameraButton = document.getElementById('toggleCameraButton');
+  let datosEstudiante = null;
+  let stream; // Variable para almacenar el stream de la cámara
+  let isFrontCamera = true; // Variable para controlar la cámara frontal/posterior
+
   // Inicializar el acceso a las cámaras
-  getCameraAccess(videoElement);
+  getCameraAccess(videoElement, isFrontCamera);
+
   function getCameraAccess(videoElement, facingMode = 'environment') {
     navigator.mediaDevices.getUserMedia({ video: { facingMode } })
-      .then(stream => {
-        videoElement.srcObject = stream;
+      .then(cameraStream => {
+        stream = cameraStream; // Almacenar el stream de la cámara
+        videoElement.srcObject = cameraStream;
       })
       .catch(error => {
         console.error('Error al acceder a la cámara web:', error);
       });
+  }
+
+  // Función para alternar entre la cámara frontal y posterior
+  function toggleCamera() {
+    if (stream) {
+      stream.getTracks().forEach(track => track.stop()); // Detener la transmisión actual
+    }
+    isFrontCamera = !isFrontCamera; // Cambiar el valor de isFrontCamera
+    getCameraAccess(videoElement, isFrontCamera ? 'user' : 'environment'); // Obtener acceso a la nueva cámara
   }
 
   // Función para manejar el reconocimiento facial del estudiante
@@ -121,6 +136,7 @@ document.addEventListener('DOMContentLoaded', function() {
       window.close(); // Opcionalmente, puedes cerrar la ventana después de enviar los datos
     }
   })
+  toggleCameraButton.addEventListener('click', toggleCamera);
 });
 
 

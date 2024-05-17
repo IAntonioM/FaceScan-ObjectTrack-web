@@ -9,12 +9,9 @@ document.addEventListener('DOMContentLoaded', function() {
   const nextBtn = document.getElementById('nextBtn');
   const spinnerObjeto = document.getElementsByClassName('spinner-box')[0];
   let datosEstudiante =null;
-  let facingMode = 'environment'; // Inicializar con la cámara trasera
-
   // Inicializar el acceso a las cámaras
-  getCameraAccess(videoElement, facingMode);
-
-  function getCameraAccess(videoElement, facingMode) {
+  getCameraAccess(videoElement);
+  function getCameraAccess(videoElement, facingMode = 'environment') {
     navigator.mediaDevices.getUserMedia({ video: { facingMode } })
       .then(stream => {
         videoElement.srcObject = stream;
@@ -23,14 +20,6 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error('Error al acceder a la cámara web:', error);
       });
   }
-
-  // ... (Resto del código)
-
-  // Evento click para voltear la cámara
-  toggleCameraButton.addEventListener('click', () => {
-    facingMode = facingMode === 'environment' ? 'user' : 'environment'; // Cambiar el valor de facingMode
-    getCameraAccess(videoElement, facingMode); // Volver a obtener acceso a la cámara con el nuevo facingMode
-  });
 
   // Función para manejar el reconocimiento facial del estudiante
   function reconocimientoFacialEstudiante() {

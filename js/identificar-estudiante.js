@@ -10,24 +10,38 @@ document.addEventListener('DOMContentLoaded', function() {
   const spinnerObjeto = document.getElementsByClassName('spinner-box')[0];
   let datosEstudiante =null;
   let currentFacingMode = 'user';
+  let stream; // Agregar una variable para almacenar el objeto de flujo de video
+
   // Inicializar el acceso a las cámaras
   function getCameraAccess(videoElement, facingMode = 'environment') {
-    navigator.mediaDevices.getUserMedia({ video: { facingMode } })
-      .then(stream => {
-        videoElement.srcObject = stream;
-      })
-      .catch(error => {
-        console.error('Error al acceder a la cámara web:', error);
-      });
+      navigator.mediaDevices.getUserMedia({ video: { facingMode } })
+          .then(mediaStream => {
+              stream = mediaStream; // Asignar el objeto de flujo de video a la variable stream
+              videoElement.srcObject = mediaStream;
+          })
+          .catch(error => {
+              console.error('Error al acceder a la cámara web:', error);
+          });
   }
 
   // Evento para el botón de voltear la cámara
   document.getElementById('toggleCameraButton').addEventListener('click', function() {
-    // Cambiar la dirección de la cámara
-    currentFacingMode = currentFacingMode === 'user' ? 'environment' : 'user';
-    // Volver a obtener acceso a la cámara con la nueva dirección
-    getCameraAccess(videoElement, currentFacingMode);
+      // Detener el flujo de video actual
+      if (stream) {
+          stream.getTracks().forEach(track => {
+              track.stop();
+          });
+      }
+
+      // Cambiar la dirección de la cámara
+      currentFacingMode = currentFacingMode === 'user' ? 'environment' : 'user';
+
+      // Volver a obtener acceso a la cámara con la nueva dirección
+      getCameraAccess(videoElement, currentFacingMode);
   });
+
+  // Iniciar la cámara
+  getCameraAccess(videoElement, currentFacingMode);
 
   // Función para manejar el reconocimiento facial del estudiante
   function reconocimientoFacialEstudiante() {

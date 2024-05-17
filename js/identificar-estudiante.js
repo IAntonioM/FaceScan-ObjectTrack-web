@@ -9,68 +9,28 @@ document.addEventListener('DOMContentLoaded', function() {
   const nextBtn = document.getElementById('nextBtn');
   const spinnerObjeto = document.getElementsByClassName('spinner-box')[0];
   let datosEstudiante =null;
-  let currentFacingMode = 'user'; // Inicializar currentFacingMode con 'user'
-  let stream;
+  let facingMode = 'environment'; // Inicializar con la cámara trasera
 
   // Inicializar el acceso a las cámaras
-  function getCameraAccess(videoElement, facingMode = 'environment') {
+  getCameraAccess(videoElement, facingMode);
+
+  function getCameraAccess(videoElement, facingMode) {
     navigator.mediaDevices.getUserMedia({ video: { facingMode } })
-      .then(mediaStream => {
-        stream = mediaStream;
-        videoElement.srcObject = mediaStream;
+      .then(stream => {
+        videoElement.srcObject = stream;
       })
       .catch(error => {
         console.error('Error al acceder a la cámara web:', error);
       });
   }
 
-  // Evento para el botón de voltear la cámara
-  document.getElementById('toggleCameraButton').addEventListener('click', function() {
-    // Detener el flujo de video actual
-    if (stream) {
-      stream.getTracks().forEach(track => {
-        track.stop();
-      });
-    }
+  // ... (Resto del código)
 
-    // Cerrar la transmisión de la cámara actual
-    if (videoElement.srcObject) {
-      const tracks = videoElement.srcObject.getTracks();
-      tracks.forEach(track => track.stop());
-      videoElement.srcObject = null;
-    }
-
-    // Cambiar la dirección de la cámara
-    currentFacingMode = currentFacingMode === 'user' ? 'environment' : 'user';
-
-    // Volver a obtener acceso a la cámara con la nueva dirección
-    getCameraAccess(videoElement, currentFacingMode);
+  // Evento click para voltear la cámara
+  toggleCameraButton.addEventListener('click', () => {
+    facingMode = facingMode === 'environment' ? 'user' : 'environment'; // Cambiar el valor de facingMode
+    getCameraAccess(videoElement, facingMode); // Volver a obtener acceso a la cámara con el nuevo facingMode
   });
-
-  // Iniciar la cámara
-  getCameraAccess(videoElement, currentFacingMode);
-
-  // Función para manejar el reconocimiento facial del estudiante
-  // ... (el resto del código sigue igual)
-
-  // Evento para el botón de voltear la cámara
-  document.getElementById('toggleCameraButton').addEventListener('click', function() {
-    // Detener el flujo de video actual
-    if (stream) {
-      stream.getTracks().forEach(track => {
-        track.stop();
-      });
-    }
-
-    // Cambiar la dirección de la cámara
-    currentFacingMode = currentFacingMode === 'user' ? 'environment' : 'user';
-
-    // Volver a obtener acceso a la cámara con la nueva dirección
-    getCameraAccess(videoElement, currentFacingMode);
-  });
-
-  // Iniciar la cámara
-  getCameraAccess(videoElement, currentFacingMode);
 
   // Función para manejar el reconocimiento facial del estudiante
   function reconocimientoFacialEstudiante() {

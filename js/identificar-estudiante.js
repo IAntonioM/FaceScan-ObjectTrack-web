@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
   let datosEstudiante =null;
   let currentFacingMode = 'user';
   // Inicializar el acceso a las cámaras
-  function getCameraAccess(videoElement, facingMode = 'user') {
+  function getCameraAccess(videoElement, facingMode = 'environment') {
     navigator.mediaDevices.getUserMedia({ video: { facingMode } })
       .then(stream => {
         videoElement.srcObject = stream;

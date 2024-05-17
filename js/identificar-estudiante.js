@@ -11,7 +11,6 @@ document.addEventListener('DOMContentLoaded', function() {
   let datosEstudiante =null;
   let currentFacingMode = 'user';
   // Inicializar el acceso a las cámaras
-  getCameraAccess(videoElement);
   function getCameraAccess(videoElement, facingMode = 'user') {
     navigator.mediaDevices.getUserMedia({ video: { facingMode } })
       .then(stream => {
@@ -21,6 +20,8 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error('Error al acceder a la cámara web:', error);
       });
   }
+
+  // Evento para el botón de voltear la cámara
   document.getElementById('toggleCameraButton').addEventListener('click', function() {
     // Cambiar la dirección de la cámara
     currentFacingMode = currentFacingMode === 'user' ? 'environment' : 'user';

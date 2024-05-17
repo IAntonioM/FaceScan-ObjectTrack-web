@@ -33,6 +33,35 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     }
 
+    // Cerrar la transmisión de la cámara actual
+    if (videoElement.srcObject) {
+      const tracks = videoElement.srcObject.getTracks();
+      tracks.forEach(track => track.stop());
+      videoElement.srcObject = null;
+    }
+
+    // Cambiar la dirección de la cámara
+    currentFacingMode = currentFacingMode === 'user' ? 'environment' : 'user';
+
+    // Volver a obtener acceso a la cámara con la nueva dirección
+    getCameraAccess(videoElement, currentFacingMode);
+  });
+
+  // Iniciar la cámara
+  getCameraAccess(videoElement, currentFacingMode);
+
+  // Función para manejar el reconocimiento facial del estudiante
+  // ... (el resto del código sigue igual)
+
+  // Evento para el botón de voltear la cámara
+  document.getElementById('toggleCameraButton').addEventListener('click', function() {
+    // Detener el flujo de video actual
+    if (stream) {
+      stream.getTracks().forEach(track => {
+        track.stop();
+      });
+    }
+
     // Cambiar la dirección de la cámara
     currentFacingMode = currentFacingMode === 'user' ? 'environment' : 'user';
 

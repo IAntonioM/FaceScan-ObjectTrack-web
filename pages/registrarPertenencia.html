@@ -6,20 +6,42 @@
   <title>Registrar Pertenencia</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="../css/registrarPertenencia.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 <body>
   <div class="header">
     <span class="username">REGISTRAR PERTENECIA</span>
-    <button class="btn btn-secondary" id="menuBtn" onclick="menu()">Menu</button>
+    <button class="btn btn-secondary" id="menuBtn" onclick="menu()"> <i class="fa-solid fa-bars"> </i> Menu</button>
   </div>
   <div class="container">
-    <button class="btn btn-primary" id="identificarEstudianteBtn">Identificar Estudiante</button>
-    <button class="btn btn-primary" id="identificarObjetoBtn">Identificar Objeto</button>
-    <button class="btn btn-primary" id="registrarPertenenciaBtn">Registrar Pertenencia</button>
-  </div>
-  <div class="container">
-    <div id="result"></div>
+      <div class="registro-info">
+          <h2>Información del Registro</h2>
+          <br>
+          <div class="info-row">
+              <div class="info-label">Estudiante:</div>
+              <div class="info-value">Sin Datos ....</div>
+          </div>
+          <div class="info-row">
+              <div class="info-label">Objeto:</div>
+              <div class="info-value">Sin Datos ....</div>
+          </div>
+          <div class="info-row">
+              <div class="info-label">Imagen:</div>
+              <div class="info-value">Sin Datos ....</div>
+          </div>
+      </div>
+      <div class="registro-result" style="display: none;">
+        <i class="fas fa-check-circle check-icon success-icon" style="display: none;"></i>
+        <i class="fas fa-times-circle check-icon error-icon" style="display: none;"></i>
+        <p class="response-message"></p>
+        <div class="botones">
+            <button class="btn btn-primary" id="identificarObjetoBtn"><i class="fa-solid fa-plus"></i> Agregar otra Pertenencia del Estudiante</button>
+            <br>
+            <a class="btn btn-danger" href="../pages/registrarPertenencia.html"><i class="fa-solid fa-rotate-right"></i> Reiniciar Registro</a>
+        </div>
+    </div>
+    
   </div>
   <script src="../utils/sessionManager.js"></script>
   <script src="../utils/config.js"></script>

@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const retryBtnObjeto = document.getElementById('retryBtnObjeto');
     const canvasObjeto = document.getElementById('canvasObjeto');
     const nextBtn = document.getElementById('nextBtn');
-    const spinnerObjeto = document.getElementById('spinner');
+    const spinnerObjeto = document.getElementsByClassName('spinner-box')[0];
     let datosObjeto =null;
     // Obtener acceso a la cámara
     getCameraAccess(videoElementObjeto);
@@ -49,13 +49,14 @@ document.addEventListener('DOMContentLoaded', function() {
               body: formData
             })
               .then(response => {
-                spinnerObjeto.style.display='inline-block';
+                spinnerObjeto.style.display = 'flex';
                 if (response.status === 401 || response.status === 422) {
                   logout(); // Cerrar sesión si la solicitud no está autorizada
                 } else if (response.status === 404) {
                   intentos++;
                   enviarFoto(); // Volver a enviar la foto si el objeto no fue encontrado
                 } else if (response.ok) {
+                  spinnerObjeto.style.display='none';
                   nextBtn.style.display = 'inline-block';
                   objetoEncontrado = true;
                   return response.json();
@@ -63,6 +64,9 @@ document.addEventListener('DOMContentLoaded', function() {
               })
               .then(data => {
                 if (data) {
+                  if(objetoEncontrado){
+                    retryBtnObjeto.style.display='inline-block';
+                  }
                   const id = data.id || 'No disponible';
                   const objeto = data.objeto || 'No disponible';
                   const mensaje = `Objeto: ${objeto}<br>`;
@@ -86,7 +90,9 @@ document.addEventListener('DOMContentLoaded', function() {
               .catch(error => {
                 console.error('Error al enviar los datos:', error);
               });
-          } else {
+          } else if(!objetoEncontrado) {
+            retryBtnObjeto.style.display='inline-block';
+            spinnerObjeto.style.display='none';
             resultadoObjeto.innerHTML = 'Intentos máximos alcanzados o objeto ya encontrado';
           }
         };
@@ -101,15 +107,13 @@ document.addEventListener('DOMContentLoaded', function() {
         videoElementObjeto.style.display = 'none';
         captureBtnObjeto.style.display = 'none';
       
-        // Mostrar el botón de reintentar y el siguiente botón
-        retryBtnObjeto.style.display = 'inline-block';
-      
         // Iniciar el reconocimiento de objetos
         reconocimientoDeObjetos();
     });
     
     // Agregar evento al botón de reintentar
     retryBtnObjeto.addEventListener('click', () => {
+        nextBtn.style.display = 'none';
         // Mostrar el elemento de video y ocultar el lienzo
         videoElementObjeto.style.display = 'block';
         canvasObjeto.style.display = 'none';

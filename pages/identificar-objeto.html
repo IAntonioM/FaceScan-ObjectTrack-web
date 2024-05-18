@@ -12,24 +12,27 @@
 </head>
 <body>
   <div class="header">
-    <span class="username">REGISTRAR PERTENECIA</span>
-    <button class="btn btn-success" id="menuBtn" onclick="menu()">Volver</button>
+    <span class="titulo">IDENTIFICAR OBJETO</span>
+    <button class="btn btn-secondary" id="menuBtn" onclick="menu()"> <i class="fa-solid fa-bars"> </i> Menu</button>
   </div>
 
 <div class="container">
-  <h4>Identificar Objeto</h4>
+  <h4></h4>
   <p id="titulo"></p>
   <video id="videoObjeto" autoplay playsinline></video>
   <br>
   <canvas id="canvasObjeto"></canvas>
-  <div class="spinner"></div>
+  <div class="spinner-box" style="display: none;">
+      <div class="spinner"></div>
+      <span class="spinner-text">Buscando</span>
+  </div>
   <button id="captureBtnObjeto"  class="btn btn-danger oval-btn">
-    <i class="fa-solid fa-magnifying-glass"></i>Identificar
+    <i class="fa-solid fa-magnifying-glass"></i>  Identificar
   </button>
-  <button id="retryBtnObjeto" class="btn btn-warning" style="display: none;">Volver a Intentar</button>
+  <button id="retryBtnObjeto" class="btn btn-warning" style="display: none;">Reintentar</button>
   <div id="resultadoObjeto">Sin Busqueda de Objeto</div>
   <div class="d-flex justify-content-end" style="width: 100%;">
-    <button class="btn btn-primary" id="nextBtn" style="display: none;">Siguiente >></button>
+    <button class="btn btn-primary" id="nextBtn" style="display: none;">Registrar Pertenencia</button>
   </div>
 </div>
   <script src="../js/identificar-objeto.js"></script>

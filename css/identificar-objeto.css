@@ -9,43 +9,40 @@ body {
   font-family: "Montserrat", sans-serif;
   color: #343a40;
 }
-
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px;
-  background-color: #6c757d;
-  color: white;
-  margin-bottom: 20px;
+  background-color: #f8f9fa;
 }
 
-.header .username {
+.header .titulo {
   font-weight: bold;
 }
 
 .container {
-  max-width: 800px;
-  margin: 0 auto;
+  max-width: 1100px;
+  margin: 20px auto;
   padding: 20px;
-  background-color: rgba(248, 249, 250, 0.8);
+  background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
 }
 
 #videoObjeto {
-    width: 100%;
-    max-width: 500px;
-    height: auto;
-    border: 1px solid black;
+  width: 100%;
+  height: auto;
+  border: 1px solid black;
+  border-radius: 20px;
   }
   #canvasObjeto {
-    display: none;
     width: 100%;
-    max-width: 500px;
     height: auto;
     border: 1px solid black;
+    display: none;
+    border-radius: 20px;
   }
 
   #resultadoObjeto {
@@ -56,7 +53,7 @@ body {
   
   .btn {
     font-size: 16px;
-    margin: 20px 0;
+    margin: 5px 0;
   }
   #resultadoObjeto{
     text-align: start;
@@ -72,3 +69,44 @@ body {
   .oval-btn i {
     margin-right: 8px; /* Ajusta el espacio entre el icono y el texto */
   }
+
+  /* Estilo del spinner-box */
+.spinner-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+/* Estilo del texto del spinner */
+.spinner-text {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* Estilo del spinner */
+.spinner {
+  border: 8px solid #f3f3f3; /* Color gris claro para el borde */
+  border-top: 8px solid #3498db; /* Color azul para la parte superior */
+  border-radius: 50%; /* Hacer el borde redondo */
+  width: 30px; /* Ancho del spinner */
+  height: 30px; /* Altura del spinner */
+  animation: spin 2s linear infinite; /* Animación de rotación */
+}
+
+/* Definición de la animación de rotación */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+.titulo_container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0;
+  border-bottom: 1px solid #ccc;
+}
+.titulo_container h5{
+  padding: 0;
+}

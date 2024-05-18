@@ -8,18 +8,22 @@ document.addEventListener('DOMContentLoaded', function() {
     const spinnerObjeto = document.getElementsByClassName('spinner-box')[0];
     let datosObjeto =null;
     // Obtener acceso a la cámara
-    getCameraAccess(videoElementObjeto);
-  
-    function getCameraAccess(videoElement, facingMode = 'environment') {
-        navigator.mediaDevices.getUserMedia({ video: { facingMode } })
-        .then(stream => {
-            videoElement.srcObject = stream;
-        })
-        .catch(error => {
-            console.error('Error al acceder a la cámara web:', error);
-        });
-    }
-  
+  getCameraAccess(videoElementObjeto);
+
+  function getCameraAccess(videoElement, facingMode = 'environment') {
+    navigator.mediaDevices.getUserMedia({
+      video: {
+        facingMode
+      }
+    })
+    .then(stream => {
+      videoElement.srcObject = stream;
+    })
+    .catch(error => {
+      console.error('Error al acceder a la cámara web:', error);
+    });
+  }
+    
     function reconocimientoDeObjetos() {
         const maxIntentos = 20;
         let intentos = 0;

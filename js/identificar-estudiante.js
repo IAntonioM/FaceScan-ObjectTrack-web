@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Inicializar el acceso a las cámaras
   getCameraAccess(videoElement, isFrontCamera);
 
-  function getCameraAccess(videoElement, facingMode = 'environment') {
+  function getCameraAccess(videoElement, facingMode = 'user') {
     navigator.mediaDevices.getUserMedia({ video: { facingMode } })
       .then(cameraStream => {
         stream = cameraStream; // Almacenar el stream de la cámara

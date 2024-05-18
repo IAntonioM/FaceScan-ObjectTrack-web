@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Obtener acceso a la cámara
     getCameraAccess(videoElementObjeto);
   
-    function getCameraAccess(videoElement, facingMode = 'environment') {
+    function getCameraAccess(videoElement, facingMode = 'user') {
         navigator.mediaDevices.getUserMedia({ video: { facingMode } })
         .then(stream => {
             videoElement.srcObject = stream;

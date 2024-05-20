@@ -1,0 +1,146 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+body {
+    background-image: url('../assets/fondo.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    font-family: "Montserrat", sans-serif;
+}
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #f8f9fa;
+    margin-bottom: 20px;
+}
+
+.header .username {
+    font-weight: bold;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.registro-info {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.info-label {
+    font-weight: bold;
+}
+
+.objeto-img {
+    max-width: 200px;
+    max-height: 200px;
+}
+
+.registro-result {
+    margin-top: 10px;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+.check-icon {
+    font-size: 72px;
+    margin-bottom: 20px;
+}
+
+.success-icon {
+    color: #28a745;
+}
+
+.error-icon {
+    color: #dc3545;
+}
+
+.botones {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+#pertenencias-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+  }
+  
+  .pertenencia {
+    width: 300px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+  }
+  
+  .pertenencia-img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+  
+  .pertenencia-info {
+    padding: 16px;
+    text-align: center;
+  }
+  
+  .pertenencia-info h4 {
+    margin-top: 0;
+    margin-bottom: 8px;
+    font-size: 18px;
+    color: #333;
+  }
+  
+  .pertenencia-info p {
+    margin-bottom: 0;
+    color: #666;
+  }
+  /* Estilo del spinner-box */
+.spinner-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin: 20px 0;
+  }
+  
+  /* Estilo del texto del spinner */
+  .spinner-text {
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  /* Estilo del spinner */
+  .spinner {
+    border: 8px solid #f3f3f3; /* Color gris claro para el borde */
+    border-top: 8px solid #3498db; /* Color azul para la parte superior */
+    border-radius: 50%; /* Hacer el borde redondo */
+    width: 30px; /* Ancho del spinner */
+    height: 30px; /* Altura del spinner */
+    animation: spin 2s linear infinite; /* Animación de rotación */
+  }
+  
+  /* Definición de la animación de rotación */
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }

@@ -10,9 +10,9 @@ document.addEventListener('DOMContentLoaded', function() {
   const spinnerObjeto = document.getElementsByClassName('spinner-box')[0];
   const toggleCameraButton = document.getElementById('toggleCameraButton');
   const barraProgreso = document.getElementById('barra-progreso');
-const porcentajeProgreso = document.getElementById('porcentaje-progreso');
-const mensajeProgreso = document.getElementById('mensaje-progreso');
-const anchoBarraMax = barraProgreso.parentNode.offsetWidth;
+  const porcentajeProgreso = document.getElementById('porcentaje-progreso');
+  const mensajeProgreso = document.getElementById('mensaje-progreso');
+  const anchoBarraMax = barraProgreso.parentNode.offsetWidth;
   
   let datosEstudiante = null;
   let stream; // Variable para almacenar el stream de la cámara

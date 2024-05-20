@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const registrarSalidaBtn = document.getElementById('registrarSalidaBtn');
   const resultDiv = document.getElementById('result');
   const containerResult=document.getElementById('container-result');
+  const spinnerObjeto = document.getElementsByClassName('spinner-box')[0];
   let dataPertenencia = { estudiante: null, objetos: [] };
 
   if (dataPertenencia.estudiante == null) {
@@ -12,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function consultarPertenencias(dataPertenencia) {
+    spinnerObjeto.style.display = 'flex';
     const formData = new FormData();
     formData.append('idEstudiante', dataPertenencia.estudiante.id);
     formData.append('estado', 'Registrada');
@@ -23,6 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
       body: formData
     })
       .then(response => {
+        spinnerObjeto.style.display='none'
         handleUnauthorized(response);
         if(response.status==404){
           return response.json().then(data => {
@@ -91,24 +94,60 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="info-value">${dataPertenencia.estudiante.nombre}</div>
       </div>`;
     consultaInfo.innerHTML = content;
-    if(dataPertenencia.objetos){
+    const pertenenciasContainer = document.getElementById('pertenencias-container');
+
+    if (dataPertenencia.objetos) {
       pertenencias.forEach(pertenencia => {
+        const pertenenciaDiv = document.createElement('div');
+        pertenenciaDiv.classList.add('pertenencia');
+    
         const imgElement = document.createElement('img');
         imgElement.src = `${pertenencia.ImagenPertenencia}`;
         imgElement.alt = 'Imagen de la Pertenencia';
-        imgElement.style.width = '100%';
-        imgElement.style.height = 'auto';
+        imgElement.classList.add('pertenencia-img');
+    
         const pertenenciaInfo = document.createElement('div');
-        pertenenciaInfo.innerHTML = `<h6>Laptop - 18/05/2024 </h6>`;
-        pertenenciaInfo.innerHTML = `<br><h4>Objetos - Perteencias</h4>`;
-        pertenenciaInfo.appendChild(imgElement);
-  
-        resultDiv.appendChild(pertenenciaInfo);
+        pertenenciaInfo.classList.add('pertenencia-info');
+    
+        const nombreObjeto = document.createElement('h4');
+        nombreObjeto.textContent = pertenencia.nombreObjeto;
+    
+        const fechaElement = document.createElement('p');
+        const horaElement = document.createElement('p');
+    
+        const fechaHora = convertirFecha(pertenencia.Fecha);
+        const opciones = {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        };
+        const opcionesHora = {
+          hour: 'numeric',
+          minute: 'numeric',
+          second: 'numeric'
+        };
+    
+        fechaElement.textContent = `Fecha: ${fechaHora.toLocaleString('es-ES', opciones)}`;
+        horaElement.textContent = `Hora: ${fechaHora.toLocaleString('es-ES', opcionesHora)}`;
+    
+        pertenenciaInfo.appendChild(nombreObjeto);
+        pertenenciaInfo.appendChild(fechaElement);
+        pertenenciaInfo.appendChild(horaElement);
+    
+        pertenenciaDiv.appendChild(imgElement);
+        pertenenciaDiv.appendChild(pertenenciaInfo);
+    
+        pertenenciasContainer.appendChild(pertenenciaDiv);
       });
-
     }
   }
-
+  function convertirFecha(fechaString) {
+    const [fecha, hora] = fechaString.split('_');
+    const [año, mes, dia] = fecha.split('-');
+    const [horas, minutos, segundos] = hora.split('-');
+    return new Date(`${año}-${mes}-${dia}T${horas}:${minutos}:${segundos}`);
+  }
   function mostrarResultado(exito, mensaje) {
     registroResult.style.display = 'block';
     const responseMessage = registroResult.querySelector('.response-message');

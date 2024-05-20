@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Registrar Salida de Pertenencia</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="../css/registrarPertenencia.css">
+  <link rel="stylesheet" href="../css/registrarSalidaPertenecia.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
  
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -28,8 +28,14 @@
       </div>
       <br>
     </div>
+    <div class="spinner-box" style="display: none;">
+      <div class="spinner"></div>
+      <span class="spinner-text">Buscando</span>
+    </div>
     <div class="container" id="container-result" style="display: none;">
       <div id="result"></div>
+      <div id="pertenencias-container"></div>
+      <br>
       <button class="btn btn-primary" id="registrarSalidaBtn">Registrar Salida de Pertenencias</button>
     </div>
     <div class="registro-result" style="display: none;">

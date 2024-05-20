@@ -9,6 +9,11 @@ document.addEventListener('DOMContentLoaded', function() {
   const nextBtn = document.getElementById('nextBtn');
   const spinnerObjeto = document.getElementsByClassName('spinner-box')[0];
   const toggleCameraButton = document.getElementById('toggleCameraButton');
+  const barraProgreso = document.getElementById('barra-progreso');
+const porcentajeProgreso = document.getElementById('porcentaje-progreso');
+const mensajeProgreso = document.getElementById('mensaje-progreso');
+const anchoBarraMax = barraProgreso.parentNode.offsetWidth;
+  
   let datosEstudiante = null;
   let stream; // Variable para almacenar el stream de la cámara
   let isFrontCamera = true; // Variable para controlar la cámara frontal/posterior
@@ -37,80 +42,114 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   // Función para manejar el reconocimiento facial del estudiante
-  function reconocimientoFacialEstudiante() {
-    const maxIntentos = 20;
-    let intentos = 0;
-    let estudianteEncontrado = false;
+// Función para manejar el reconocimiento facial del estudiante
+function reconocimientoFacialEstudiante() {
+  const umbraldeSimilitud = 50; // 70% de similitud
+  const maxIntentos = 40; // Límite de intentos
+  const minCoincidencias = 10; // Número mínimo de coincidencias
+  let intentos = 0;
+  let estudianteEncontrado = false;
+  const coincidencias = []; // Array para almacenar las coincidencias
 
-    const enviarFoto = () => {
-      const context = canvas.getContext('2d');
-      canvas.width = videoElement.videoWidth;
-      canvas.height = videoElement.videoHeight;
-      context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
-      canvas.style.display = 'block';
+  const enviarFoto = () => {
+    const context = canvas.getContext('2d');
+    canvas.width = videoElement.videoWidth;
+    canvas.height = videoElement.videoHeight;
+    context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+    canvas.style.display = 'block';
 
-      if (intentos < maxIntentos && !estudianteEncontrado) {
-        const imagenURI = canvas.toDataURL("image/jpeg");
-        const file = dataURItoFile(imagenURI, 'photo.jpg');
-        const formData = new FormData();
-        formData.append('file', file);
-        
-        fetch(API_URL + '/estudiante/reconocimiento-facial', {
-          method: 'POST',
-          headers: {
-            'Authorization': 'Bearer ' + getCookie('jwt'),
-          },
-          body: formData
-        })
-          .then(response => {
-            spinnerObjeto.style.display = 'flex';
-            handleUnauthorized(response);
-            if (response.status === 404) {
-              intentos++;
-              enviarFoto();
-            } else if (response.ok) {
-              spinnerObjeto.style.display='none';
-              estudianteEncontrado = true;
-              return response.json();
+    if (intentos < maxIntentos) {
+      const imagenURI = canvas.toDataURL("image/jpeg");
+      const file = dataURItoFile(imagenURI, 'photo.jpg');
+      const formData = new FormData();
+      formData.append('file', file);
+      fetch(API_URL + '/estudiante/reconocimiento-facial', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer ' + getCookie('jwt'),
+        },
+        body: formData
+      })
+      .then(response => {
+        spinnerObjeto.style.display = 'flex';
+        handleUnauthorized(response);
+        if (response.status === 404) {
+          intentos++;
+          enviarFoto();
+        } else if (response.ok) {
+          spinnerObjeto.style.display = 'none';
+          return response.json();
+        }
+      })
+      .then(data => {
+        if (data) {
+          const similitud = data.Similitud || 0;
+          if (similitud >= umbraldeSimilitud) {
+            coincidencias.push(data);
+            console.log(coincidencias);
+          
+            const porcentajeActual = (coincidencias.length / minCoincidencias) * 100;
+            barraProgreso.style.width = `${(porcentajeActual / 100) * anchoBarraMax}px`;
+            porcentajeProgreso.textContent = `${Math.round(porcentajeActual)}%`;
+          
+            if (coincidencias.length < minCoincidencias/2) {
+              mensajeProgreso.textContent = 'Intento de reconocimiento en curso...';
+            } else if (coincidencias.length > minCoincidencias/2) {
+              mensajeProgreso.textContent = 'Ya casi hemos terminado';
             }
-          })
-          .then(data => {
-            if (data) {
-              if(estudianteEncontrado){
-                retryBtn.style.display='inline-block';
+          } else {
+            console.log(data, 'no supera el umbral del 50%');
+          }
+          
+
+          if (coincidencias.length >= minCoincidencias && coincidencias.every(coincidencia => coincidencia.Similitud >= umbraldeSimilitud)) {
+            estudianteEncontrado = true;
+            barraProgreso.style.width = `${anchoBarraMax}px`;
+            porcentajeProgreso.textContent = '100%';
+            mensajeProgreso.textContent = 'Identificación completada';
+            const ultimaCoincidencia = coincidencias[coincidencias.length - 1];
+            const id = ultimaCoincidencia.idEstudiante || 'No disponible';
+            const nombres = ultimaCoincidencia.Nombres || 'No disponible';
+            const codigoEstudiante = ultimaCoincidencia.codigoEstudiante || 'No disponible';
+            const similitud = ultimaCoincidencia.Similitud || 'No disponible';
+            const mensaje = `Nombres: ${nombres}<br>Código: ${codigoEstudiante}`;
+            resultadoEstudiante.innerHTML = mensaje;
+            nextBtn.style.display = 'inline-block';
+            retryBtn.style.display = 'inline-block';
+            // Enviar datos y redirigir al usuario
+            datosEstudiante = {
+              type: 'EstudianteData',
+              payload: {
+                id: id,
+                nombre: nombres,
+                codigo: codigoEstudiante,
+                similitud: similitud,
               }
-              const id = data.idEstudiante || 'No disponible';
-              const nombres = data.Nombres || 'No disponible';
-              const codigoEstudiante = data.codigoEstudiante || 'No disponible';
-              const mensaje = `Nombres: ${nombres}<br>Código: ${codigoEstudiante}`;
-              resultadoEstudiante.innerHTML = mensaje;
-              nextBtn.style.display = 'inline-block';
-              // Enviar datos y redirigir al usuario
-              datosEstudiante = {
-                type: 'EstudianteData',
-                payload: {
-                  id: id,
-                  nombre: nombres,
-                  codigo: codigoEstudiante,
-                }
-              };
-            } else {
-              resultadoEstudiante.innerHTML = 'Estudiante no encontrado';
-            }
-          })
-          .catch(error => {
-            console.error('Error al enviar los datos:', error);
-          });
-      } else if (!estudianteEncontrado) {
-        colocarEstudianteNoEncontrado(resultadoEstudiante);
-        spinnerObjeto.style.display='none';
-        retryBtn.style.display='inline-block';
-      }
-    };
+            };
+            console.log(datosEstudiante);
+          } else {
+            intentos++;
+            enviarFoto();
+          }
+        } else {
+          resultadoEstudiante.innerHTML = 'Estudiante no encontrado';
+        }
+      })
+      .catch(error => {
+        console.error('Error al enviar los datos:', error);
+      });
+    } else {
+      colocarEstudianteNoEncontrado(resultadoEstudiante);
+      spinnerObjeto.style.display = 'none';
+      retryBtn.style.display = 'inline-block';
+      mensajeProgreso.textContent = 'No se puedo Identificar al Estudiante';
+      console.log('Solicitud no conseguida');
+    }
+  };
 
-    // Iniciar el envío de la primera foto
-    enviarFoto();
-  }
+  // Iniciar el envío de la primera foto
+  enviarFoto();
+}
   // Función para mostrar el mensaje de estudiante no encontrado
   function colocarEstudianteNoEncontrado(resultadoEstudiante) {
     const mensaje = `Estudiante no encontrado`;
@@ -129,6 +168,10 @@ document.addEventListener('DOMContentLoaded', function() {
     canvas.style.display = 'none';
     searchEstudianteBtn.style.display = 'inline-block';
     retryBtn.style.display = 'none';
+    resultadoEstudiante.style.display='none';
+    datosEstudiante=null;
+    barraProgreso.style.width = `0px`;
+    porcentajeProgreso.textContent = '0%';
   });
   nextBtn.addEventListener('click',()=>{
     if (datosEstudiante) {

@@ -44,12 +44,12 @@ const anchoBarraMax = barraProgreso.parentNode.offsetWidth;
   // Función para manejar el reconocimiento facial del estudiante
 // Función para manejar el reconocimiento facial del estudiante
 function reconocimientoFacialEstudiante() {
-  const umbraldeSimilitud = 30; // 70% de similitud
-  const maxIntentos = 30; // Límite de intentos
-  const minCoincidencias = 6; // Número mínimo de coincidencias
+  const umbraldeSimilitud = 20; // 70% de similitud
+  const maxIntentos = 40; // Límite de intentos
+  const minCoincidencias = 5; // Número mínimo de coincidencias
   let intentos = 0;
   let estudianteEncontrado = false;
-  const coincidencias = []; // Array para almacenar las coincidencias
+  let coincidencias = []; // Array para almacenar las coincidencias
 
   const enviarFoto = () => {
     const context = canvas.getContext('2d');
@@ -85,35 +85,40 @@ function reconocimientoFacialEstudiante() {
         if (data) {
           const similitud = data.Similitud || 0;
           if (similitud >= umbraldeSimilitud) {
-            coincidencias.push(data);
-            console.log(coincidencias);
-          
-            const porcentajeActual = (coincidencias.length / minCoincidencias) * 100;
+            coincidencias=agregarCoincidencia(coincidencias, data);
+
+            // Buscar la coincidencia con el mayor número de coincidencias
+            const coincidenciaMaxima = coincidencias.reduce((max, obj) => {
+              return obj.numCoincidencia > (max.numCoincidencia || 0) ? obj : max;
+            }, {});
+        
+            const maxCoincidencias = coincidenciaMaxima.numCoincidencia || 0;
+            const porcentajeActual = (maxCoincidencias / minCoincidencias) * 100;
             barraProgreso.style.width = `${(porcentajeActual / 100) * anchoBarraMax}px`;
             porcentajeProgreso.textContent = `${Math.round(porcentajeActual)}%`;
-          
-            if (coincidencias.length < minCoincidencias/2) {
+        
+            if (maxCoincidencias < minCoincidencias / 2) {
               mensajeProgreso.textContent = 'Intento de reconocimiento en curso...';
-            } else if (coincidencias.length > minCoincidencias/2) {
+            } else if (maxCoincidencias >= minCoincidencias / 2 && maxCoincidencias < minCoincidencias) {
               mensajeProgreso.textContent = 'Ya casi hemos terminado';
             }
           } else {
             console.log(data, 'no supera el umbral del 50%');
           }
-          
 
-          if (coincidencias.length >= minCoincidencias && coincidencias.every(coincidencia => coincidencia.Similitud >= umbraldeSimilitud)) {
+          if (buscarCoincidenciaCantidad(coincidencias,minCoincidencias)) {
             estudianteEncontrado = true;
             barraProgreso.style.width = `${anchoBarraMax}px`;
             porcentajeProgreso.textContent = '100%';
             mensajeProgreso.textContent = 'Identificación completada';
-            const ultimaCoincidencia = coincidencias[coincidencias.length - 1];
+            const ultimaCoincidencia = buscarCoincidenciaCantidad(coincidencias,minCoincidencias);
             const id = ultimaCoincidencia.idEstudiante || 'No disponible';
             const nombres = ultimaCoincidencia.Nombres || 'No disponible';
             const codigoEstudiante = ultimaCoincidencia.codigoEstudiante || 'No disponible';
             const similitud = ultimaCoincidencia.Similitud || 'No disponible';
             const mensaje = `Nombres: ${nombres}<br>Código: ${codigoEstudiante}`;
             resultadoEstudiante.innerHTML = mensaje;
+            resultadoEstudiante.display = 'block';
             nextBtn.style.display = 'inline-block';
             retryBtn.style.display = 'inline-block';
             // Enviar datos y redirigir al usuario
@@ -150,6 +155,24 @@ function reconocimientoFacialEstudiante() {
   // Iniciar el envío de la primera foto
   enviarFoto();
 }
+function agregarCoincidencia(coincidencias, data) {
+  let encontrado = false;
+
+  for (let obj of coincidencias) {
+    if (obj.idEstudiante === data.idEstudiante) {
+      obj.numCoincidencia = (obj.numCoincidencia || 1) + 1;
+      encontrado = true;
+      break;
+    }
+  }
+
+  if (!encontrado) {
+    data.numCoincidencia = 1;
+    coincidencias.push(data);
+  }
+
+  return coincidencias;
+}
   // Función para mostrar el mensaje de estudiante no encontrado
   function colocarEstudianteNoEncontrado(resultadoEstudiante) {
     const mensaje = `Estudiante no encontrado`;
@@ -168,7 +191,7 @@ function reconocimientoFacialEstudiante() {
     canvas.style.display = 'none';
     searchEstudianteBtn.style.display = 'inline-block';
     retryBtn.style.display = 'none';
-    resultadoEstudiante.style.display='none';
+    resultadoEstudiante.innerHTML = 'Esperando Busqueda ....';
     datosEstudiante=null;
     barraProgreso.style.width = `0px`;
     porcentajeProgreso.textContent = '0%';
@@ -180,6 +203,17 @@ function reconocimientoFacialEstudiante() {
     }
   })
   toggleCameraButton.addEventListener('click', toggleCamera);
+  
+  function buscarCoincidenciaCantidad(coincidencias, numCoincidencia) {
+    for (let obj of coincidencias) {
+      if (obj.numCoincidencia === numCoincidencia) {
+        return obj;
+      }
+    }
+    return null;
+  }
+  
+
 });
 
 

@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
   
     // Función para manejar el reconocimiento facial del estudiante
     function reconocimientoFacialEstudiante() {
-      const umbraldeSimilitud = 0.7; // 70% de similitud
+      const umbraldeSimilitud = 30; // 70% de similitud
       const maxIntentos = 20; // Límite de intentos
       const minCoincidencias = 4; // Número mínimo de coincidencias
       let intentos = 0;

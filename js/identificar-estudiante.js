@@ -44,9 +44,9 @@ const anchoBarraMax = barraProgreso.parentNode.offsetWidth;
   // Función para manejar el reconocimiento facial del estudiante
 // Función para manejar el reconocimiento facial del estudiante
 function reconocimientoFacialEstudiante() {
-  const umbraldeSimilitud = 50; // 70% de similitud
-  const maxIntentos = 40; // Límite de intentos
-  const minCoincidencias = 10; // Número mínimo de coincidencias
+  const umbraldeSimilitud = 30; // 70% de similitud
+  const maxIntentos = 30; // Límite de intentos
+  const minCoincidencias = 6; // Número mínimo de coincidencias
   let intentos = 0;
   let estudianteEncontrado = false;
   const coincidencias = []; // Array para almacenar las coincidencias

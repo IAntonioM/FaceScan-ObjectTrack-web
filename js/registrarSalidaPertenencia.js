@@ -142,12 +142,6 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     }
   }
-  function convertirFecha(fechaString) {
-    const [fecha, hora] = fechaString.split('_');
-    const [año, mes, dia] = fecha.split('-');
-    const [horas, minutos, segundos] = hora.split('-');
-    return new Date(`${año}-${mes}-${dia}T${horas}:${minutos}:${segundos}`);
-  }
   function mostrarResultado(exito, mensaje) {
     registroResult.style.display = 'block';
     const responseMessage = registroResult.querySelector('.response-message');

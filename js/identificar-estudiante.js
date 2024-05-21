@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
 function reconocimientoFacialEstudiante() {
   const umbraldeSimilitud = 20; // 70% de similitud
   const maxIntentos = 40; // Límite de intentos
-  const minCoincidencias = 5; // Número mínimo de coincidencias
+  const minCoincidencias = 4; // Número mínimo de coincidencias
   let intentos = 0;
   let estudianteEncontrado = false;
   let coincidencias = []; // Array para almacenar las coincidencias

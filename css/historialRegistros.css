@@ -1,0 +1,106 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+body {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  font-family: "Montserrat", sans-serif;
+  color: #343a40;
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: #f8f9fa;
+}
+
+.header .titulo {
+  font-weight: bold;
+}
+
+.search-box {
+    background-color: #333;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+}
+
+#searchInput {
+    padding: 10px;
+    width: 80%;
+    max-width: 400px;
+    border: none;
+    border-radius: 4px;
+}
+
+main {
+    padding: 20px;
+}
+
+.registro-item {
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    padding: 20px;
+}
+
+.registro-header {
+    margin-bottom: 10px;
+}
+
+.registro-body {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.registro-body img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+}
+
+.estado {
+    font-weight: bold;
+    color: green;
+}
+
+@media (max-width: 600px) {
+    .registro-body {
+        flex-direction: column;
+    }
+}
+
+  /* Estilo del spinner-box */
+  .spinner-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin: 20px 0;
+  }
+  
+  /* Estilo del texto del spinner */
+  .spinner-text {
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  /* Estilo del spinner */
+  .spinner {
+    border: 8px solid #f3f3f3; /* Color gris claro para el borde */
+    border-top: 8px solid #3498db; /* Color azul para la parte superior */
+    border-radius: 50%; /* Hacer el borde redondo */
+    width: 30px; /* Ancho del spinner */
+    height: 30px; /* Altura del spinner */
+    animation: spin 2s linear infinite; /* Animación de rotación */
+  }
+  /* Definición de la animación de rotación */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+

@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function() {
                   console.log("Obejto recnocido")
                 } else {
                   console.log("Obejto no recnocido")
-                  resultadoObjeto.innerHTML = 'Objeto no encontrado';
+                  resultadoObjeto.innerHTML = 'Objeto no Identificado';
                 }
               })
               .catch(error => {

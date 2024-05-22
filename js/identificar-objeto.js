@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
     
     function reconocimientoDeObjetos() {
+      spinnerObjeto.style.display = 'flex';
         const maxIntentos = 20;
         let intentos = 0;
         let objetoEncontrado = false;
@@ -35,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
           canvasObjeto.width = videoElementObjeto.videoWidth;
           canvasObjeto.height = videoElementObjeto.videoHeight;
           context.drawImage(videoElementObjeto, 0, 0, canvasObjeto.width, canvasObjeto.height);
-          canvasObjeto.style.display = 'block';
+          canvasObjeto.style.display = 'none';
       
           const resultadoObjeto = document.getElementById('resultadoObjeto');
       
@@ -53,7 +54,6 @@ document.addEventListener('DOMContentLoaded', function() {
               body: formData
             })
               .then(response => {
-                spinnerObjeto.style.display = 'flex';
                 if (response.status === 401 || response.status === 422) {
                   logout(); // Cerrar sesión si la solicitud no está autorizada
                 } else if (response.status === 404) {
@@ -70,6 +70,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (data) {
                   if(objetoEncontrado){
                     retryBtnObjeto.style.display='inline-block';
+                    canvasObjeto.style.display='block';
+                    videoElementObjeto.style.display='none';
                   }
                   const id = data.id || 'No disponible';
                   const objeto = data.objeto || 'No disponible';
@@ -108,7 +110,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Agregar evento al botón para capturar objeto
     captureBtnObjeto.addEventListener('click', () => {
         // Ocultar el elemento de video y el botón de captura
-        videoElementObjeto.style.display = 'none';
+        videoElementObjeto.style.display = 'block';
         captureBtnObjeto.style.display = 'none';
       
         // Iniciar el reconocimiento de objetos

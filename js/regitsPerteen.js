@@ -1,90 +1,63 @@
 document.addEventListener('DOMContentLoaded', function() {
     validTokenSession();
     const identificarObjetoBtn = document.getElementById('identificarObjetoBtn');
-    const registroInfo = document.querySelector('.registro-info');
-    const registroResult = document.querySelector('.registro-result');
+    const registroInfo = document.getElementsByClassName('registro-info')[0];
+    const registroResult = document.getElementsByClassName('registro-result')[0];
     const responseMessage = registroResult.querySelector('.response-message');
     const successIcon = registroResult.querySelector('.success-icon');
     const errorIcon = registroResult.querySelector('.error-icon');
     let data = { estudiante: null, objeto: null };
-
-    init();
-
-    function init() {
-        identificarObjetoBtn.addEventListener('click', abrirVentanaIdentificarObjeto);
-        validarDatos();
-        window.addEventListener('message', manejoDeVentanas);
-    }
-
-    function abrirVentanaIdentificarObjeto() {
+  
+    identificarObjetoBtn.addEventListener('click', () => {
         window.open('identificar-objeto.html', '_blank');
-    }
-
-    function validarDatos() {
-        if (!data.estudiante && !data.objeto) {
-            window.open('identificar-estudiante.html', '_blank');
-        }
-    }
-
-    function manejoDeVentanas(event) {
-        const { type, payload } = event.data;
-        if (type === 'EstudianteData') {
-            data.estudiante = payload;
-            mostrarDatos(data);
-            abrirVentanaIdentificarObjeto();
-        } else if (type === 'ObjetoData') {
-            data.objeto = payload;
-            mostrarDatos(data);
-            registrarPertenencia();
-        }
-    }
-
+    });
+  
     function registrarPertenencia() {
         const file = dataURItoFile(data.objeto.imgUri, 'photo.jpg');
         const formData = new FormData();
         formData.append('file', file);
         formData.append('idEstudiante', data.estudiante.id);
         formData.append('idObjeto', data.objeto.id);
-
-        fetchPertenencia(formData)
-            .then(data => mostrarIconoResultado(true, data.message))
-            .catch(error => handleErrorResponse(error));
-    }
-
-    function fetchPertenencia(formData) {
-        return fetch(API_URL + '/pertenencia/registrar-pertenencia', {
+  
+        fetch(API_URL + '/pertenencia/registrar-pertenencia', {
             method: 'POST',
             headers: {
                 'Authorization': 'Bearer ' + getCookie('jwt'),
             },
             body: formData
         })
-        .then(handleResponse)
-        .then(response => response.json());
-    }
-
-    function handleResponse(response) {
-        if (!response.ok) {
-            throw response;
-        }
-        return response;
-    }
-
-    function handleErrorResponse(error) {
-        error.json().then(err => {
-            mostrarIconoResultado(false, err.message || 'Error al Registrar Pertenencia');
+        .then(response => {
+            if (!response.ok) {
+                throw response;
+            }
+            return response.json();
+        })
+        .then(data => {
+            mostrarResultado(true, data.message);
+        })
+        .catch(error => {
+            error.json().then(err => {
+                mostrarResultado(false, err.message || 'Error al Registrar Pertenencia');
+            });
         });
     }
-
-    function mostrarIconoResultado(exito, mensaje) {
+  
+    function mostrarResultado(exito, mensaje) {
         registroResult.style.display = 'block';
         responseMessage.textContent = mensaje;
-        successIcon.style.display = exito ? 'block' : 'none';
-        errorIcon.style.display = exito ? 'none' : 'block';
+  
+        if (exito) {
+            successIcon.style.display = 'block';
+            errorIcon.style.display = 'none';
+        } else {
+            successIcon.style.display = 'none';
+            errorIcon.style.display = 'block';
+        }
     }
-
-    function mostrarDatos(data) {
+  
+    function showResult(data) {
         let content = `<h2>Información del Registro</h2><br>`;
+  
         if (data.estudiante) {
             content += `
                 <div class="info-row">
@@ -96,6 +69,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="info-value">${data.estudiante.nombre}</div>
                 </div>`;
         }
+  
         if (data.objeto) {
             content += `
                 <div class="info-row">
@@ -107,6 +81,23 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="info-value"><img src="${data.objeto.imgUri}" alt="${data.objeto.objeto}" class="objeto-img"></div>
                 </div>`;
         }
+  
         registroInfo.innerHTML = content;
     }
-});
+  
+    if (data.estudiante == null && data.objeto == null) {
+        window.open('identificar-estudiante.html', '_blank');
+    }
+  
+    window.addEventListener('message', (event) => {
+        if (event.data.type === 'EstudianteData') {
+            data.estudiante = event.data.payload;
+            showResult(data);
+            window.open('identificar-objeto.html', '_blank');
+        } else if (event.data.type === 'ObjetoData') {
+            data.objeto = event.data.payload;
+            showResult(data);
+            registrarPertenencia();
+        }
+    });
+  });

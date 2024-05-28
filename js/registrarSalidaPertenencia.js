@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
       mostrarSpinner(true);
       const formData = new FormData();
       formData.append('idEstudiante', dataPertenencia.estudiante.id);
-      formData.append('estado', 'Registrada');
+      formData.append('idEstado', '1');
 
       fetchPertenencias(formData)
           .then(data => {

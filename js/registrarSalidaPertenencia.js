@@ -2,6 +2,8 @@ document.addEventListener('DOMContentLoaded', function() {
   const consultaInfo = document.querySelector('.consulta-info');
   const registroResult = document.querySelector('.registro-result');
   const registrarSalidaBtn = document.getElementById('registrarSalidaBtn');
+  const registrarPerdidaBtn = document.getElementById('registrarPerdidaBtn');
+  
   const resultDiv = document.getElementById('result');
   const containerResult = document.getElementById('container-result');
   const spinnerObjeto = document.querySelector('.spinner-box');
@@ -14,7 +16,8 @@ document.addEventListener('DOMContentLoaded', function() {
       if (!dataPertenencia.estudiante) {
           window.open('identificar-estudiante.html', '_blank');
       }
-      registrarSalidaBtn.addEventListener('click', registrarSalida);
+      registrarSalidaBtn.addEventListener('click', () => registrarSalida(2));
+      registrarPerdidaBtn.addEventListener('click', () => registrarSalida(3));
       window.addEventListener('message', handleMessage);
   }
 
@@ -55,22 +58,28 @@ document.addEventListener('DOMContentLoaded', function() {
           .then(response => response.json());
   }
 
-  function registrarSalida() {
-      containerResult.style.display = 'none';
-      const idRegistros = dataPertenencia.objetos.map(objeto => objeto.idPertenencia);
+  function registrarSalida(estado) {
+    containerResult.style.display = 'none';
+    const idRegistros = dataPertenencia.objetos.map(objeto => objeto.idPertenencia);
 
-      fetch(API_URL + '/pertenencia/registrar-salida-pertenencia', {
-          method: 'POST',
-          headers: {
-              'Authorization': 'Bearer ' + getCookie('jwt'),
-              'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(idRegistros)
-      })
-          .then(handleResponse)
-          .then(data => mostrarIconoResultado(true, 'Registrado correctamente, salida de pertenencias '))
-          .catch(error => mostrarIconoResultado(false, 'Error al registrar la salida de pertenencias'));
-  }
+    const requestData = {
+        idRegistros: idRegistros,
+        estado: estado
+    };
+
+    fetch(API_URL + '/pertenencia/registrar-salida-pertenencia', {
+        method: 'POST',
+        headers: {
+            'Authorization': 'Bearer ' + getCookie('jwt'),
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestData)
+    })
+    .then(handleResponse)
+    .then(data => mostrarIconoResultado(true, 'Registrado correctamente, salida de pertenencias '))
+    .catch(error => mostrarIconoResultado(false, 'Error al registrar la salida de pertenencias'));
+}
+
 
   function handleResponse(response) {
       mostrarSpinner(false);

@@ -20,14 +20,17 @@ document.addEventListener('DOMContentLoaded', function() {
   function consultarRegistrosPertenencias(searchText) {
     mostrarSpinner(true);
       const formData = crearDataFormulario({ busqueda: searchText });
-
+    console.log("peticion data")
       fetch(API_URL + '/pertenencia/consultar-pertenencia-busqueda', {
           method: 'POST',
           headers: createHeaders(),
           body: formData
       })
-      .then(response => handleResponse(response))
-      .then(data => {
+      .then(data=>{
+        return handleResponse(data);
+          
+    })
+      .then(data => {     
           mostrarDatosDeRegistro(data);
           mostrarSpinner(false);
       })
@@ -101,6 +104,7 @@ document.addEventListener('DOMContentLoaded', function() {
       img.src = registro.ImagenPertenencia;
       img.alt = registro.nombreObjeto;
       img.classList.add('card-img-top');
+      img.loading = 'lazy'; 
 
       const cardBody = createCardBody(registro);
       const cardFooter = createCardFooter(registro);

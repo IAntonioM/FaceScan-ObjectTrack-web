@@ -49,13 +49,22 @@ body {
   
   .header {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
+    align-items: start;
     padding: 10px;
     background-color: #f8f9fa;
   }
+  .header-username{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
   
   .header .username {
+    font-weight: bold;
+  }
+  .header .rol {
     font-weight: bold;
   }
   
@@ -63,7 +72,7 @@ body {
     background-color: #dc3545;
     color: #fff;
     border: none;
-    padding: 5px 10px;
+    padding: 5px 5px;
     border-radius: 5px;
   }
   

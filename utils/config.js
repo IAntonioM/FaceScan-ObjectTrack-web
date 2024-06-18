@@ -1,4 +1,4 @@
-const API_URL = 'https://7ea2-2001-1388-1e42-111-28a4-b78a-b957-820.ngrok-free.app';
+const API_URL = 'https://d920-2001-1388-1e42-6025-f932-4639-d57e-c15d.ngrok-free.app';
 
 
 

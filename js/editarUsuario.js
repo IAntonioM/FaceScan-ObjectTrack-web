@@ -33,13 +33,11 @@ function editarUsuario() {
         logout();
         return;
     }
-
     const usuarioData = {
         usuario: username,
         contraseña: password,
         idRol: rol
     };
-
     fetch(apiUrl, {
         method: 'PUT',
         headers: {

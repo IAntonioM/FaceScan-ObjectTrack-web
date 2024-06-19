@@ -18,13 +18,11 @@ function registrarUsuario() {
         logout();
         return;
     }
-
     const usuarioData = {
         usuario: username,
         contraseña: password,
         idRol: rol
     };
-
     fetch(apiUrl, {
         method: 'POST',
         headers: {

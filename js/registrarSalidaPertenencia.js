@@ -88,9 +88,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function handleResponse(response) {
         mostrarSpinner(false);
-        if (response.status === 401) {
-            handleUnauthorized(response);
-        }
+        handleUnauthorized(response);
         if (response.status === 404) {
             return response.json().then(data => {
                 mostrarIconoResultado(false, 'No hay pertenencias registradas del estudiante');

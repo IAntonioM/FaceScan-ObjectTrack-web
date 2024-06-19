@@ -104,3 +104,16 @@ main {
     100% { transform: rotate(360deg); }
   }
 
+.estado-salida {
+    color: green;
+}
+
+.estado-extraviada {
+    color: red;
+}
+
+.estado-ingresada {
+    color: rgb(103, 138, 255);
+}
+
+

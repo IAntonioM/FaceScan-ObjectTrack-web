@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             handleUnauthorized(response);
             if (!response.ok) {
+                handleUnauthorized(response)
                 throw new Error(`Error al obtener datos de ${endpoint}: ${response.statusText}`);
             }
             return await response.json();

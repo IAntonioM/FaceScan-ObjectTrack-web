@@ -136,27 +136,42 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function createCardFooter(registro) {
-      const cardFooter = document.createElement('div');
-      cardFooter.classList.add('card-footer');
-
-      const estadoSpan = createFooterSpan('Estado', registro.Estado);
-      const fechaSpan = createFooterSpan('Fecha', convertirFechaTexto(registro.Fecha, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }));
-      const horaSpan = createFooterSpan('Hora', convertirFechaTexto(registro.Fecha, { hour: 'numeric', minute: 'numeric', second: 'numeric' }));
-
-      cardFooter.appendChild(estadoSpan);
-      cardFooter.appendChild(document.createElement('br'));
-      cardFooter.appendChild(fechaSpan);
-      cardFooter.appendChild(document.createElement('br'));
-      cardFooter.appendChild(horaSpan);
-
-      return cardFooter;
+    const cardFooter = document.createElement('div');
+    cardFooter.classList.add('card-footer');
+  
+    const estadoSpan = createFooterSpan('Estado', registro.Estado);
+    const fechaSpan = createFooterSpan('Fecha', convertirFechaTexto(registro.Fecha, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }));
+    const horaSpan = createFooterSpan('Hora', convertirFechaTexto(registro.Fecha, { hour: 'numeric', minute: 'numeric', second: 'numeric' }));
+  
+    cardFooter.appendChild(estadoSpan);
+    cardFooter.appendChild(document.createElement('br'));
+    cardFooter.appendChild(fechaSpan);
+    cardFooter.appendChild(document.createElement('br'));
+    cardFooter.appendChild(horaSpan);
+  
+    return cardFooter;
   }
-
+  
   function createFooterSpan(label, value) {
-      const span = document.createElement('small');
-      span.classList.add('text-muted');
-      span.innerHTML = `${label}: <span class="${label.toLowerCase()}">${value}</span>`;
-      return span;
+    const span = document.createElement('small');
+    span.classList.add('text-muted');
+  
+    // Asigna una clase basada en el estado
+    let estadoClass = '';
+    switch(value) {
+      case 'Salida':
+        estadoClass = 'estado-salida';
+        break;
+      case 'Extraviada':
+        estadoClass = 'estado-extraviada';
+        break;
+      case 'Ingresada':
+        estadoClass = 'estado-ingresada';
+        break;
+    }
+  
+    span.innerHTML = `${label}: <span class="${label.toLowerCase()} ${estadoClass}">${value}</span>`;
+    return span;
   }
 
   function convertirFechaTexto(fecha, opciones) {

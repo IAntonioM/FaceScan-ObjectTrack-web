@@ -64,6 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function handleResponse(response) {
+        handleUnauthorized(response)
         if (!response.ok) {
             throw response;
         }

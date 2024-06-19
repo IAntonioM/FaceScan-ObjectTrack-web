@@ -54,6 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
               body: formData
             })
               .then(response => {
+                handleUnauthorized(response)
                 if (response.status === 401 || response.status === 422) {
                   logout(); // Cerrar sesión si la solicitud no está autorizada
                 } else if (response.status === 404) {

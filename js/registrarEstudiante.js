@@ -88,10 +88,7 @@ function sendVideo() {
   })
     .then(response => {
       loadingSpinner.style.display = 'none'; // Ocultar spinner de carga
-      if (response.status === 401 || response.status === 422 ) {
-        // Cerrar sesión si la solicitud no está autorizada (401 Unauthorized)
-        logout();
-      }
+      handleUnauthorized(response)
       if (!response.ok) {
         throw new Error('Error en la solicitud', response);
       }

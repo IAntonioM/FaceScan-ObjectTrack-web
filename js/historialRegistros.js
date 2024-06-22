@@ -101,7 +101,11 @@ document.addEventListener('DOMContentLoaded', function() {
       card.classList.add('card', 'h-100', 'registro-item');
 
       const img = document.createElement('img');
+<<<<<<< HEAD
       img.src = registro.ImagenPertenencia;
+=======
+      img.src = API_URL+"/pertenencia/imagen/"+registro.ImagenPertenencia;
+>>>>>>> 5233962ad8b1587c13e80f1e7bde30ed1835e309
       img.alt = registro.nombreObjeto;
       img.classList.add('card-img-top');
       img.loading = 'lazy'; 

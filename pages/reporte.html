@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,9 +15,11 @@
     <div class="header">
         <span class="username">GENERAR REPORTE</span>
         <button class="btn btn-secondary" id="menuBtn" onclick="menu()"> <i class="fa-solid fa-bars"></i> Menu</button>
-        
     </div>
-    <button  id="downloadPagePdf">Descargar PDF</button>
+    <div>
+        <button id="downloadPagePdf" class="btn btn-primary">Descargar PDF <i class="fa-solid fa-file-pdf"></i></button>
+        <button class="btn btn-success" onclick="fetchExcelFile()">Descargar Excel <i class="fa-solid fa-file-excel"></i></button>
+    </div>
     <main id="main">
         <section>
             <h2>Registros por Tipo de Objeto</h2>
@@ -45,19 +47,17 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Aquí se generarían las filas de la tabla dinámicamente con los datos -->
                     </tbody>
                 </table>
             </div>
         </section>
         <section>
             <h2>Todos los Registros</h2>
-            <h3>Último mes</h3>
             <div class="table-container">
                 <table id="allRecordsTable">
                     <thead>
                         <tr>
-                            <th>ID Pertenencia</th>
+                            <th>ID</th>
                             <th>ID Estudiante</th>
                             <th>ID Objeto</th>
                             <th>Estado</th>
@@ -68,17 +68,19 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Aquí se generarían las filas de la tabla dinámicamente con los datos -->
                     </tbody>
                 </table>
             </div>
         </section>
     </main>
     <footer>
-        <p>By Antonio :v</p>
+        <p>IntelliGuard</p>
     </footer>
     <script src="../utils/sessionManager.js"></script>
     <script src="../utils/config.js"></script>
     <script src="../utils/util.js"></script>
-    <script src="../js/chart.js"></script>
+    <script src="../js/reporte.js"></script>
+</body>
+</html>
+
 

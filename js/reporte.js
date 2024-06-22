@@ -1,11 +1,16 @@
-
 document.addEventListener('DOMContentLoaded', function() {
-
-    const apiUrl = API_URL + '/pertenencia';  // Ajusta la URL a tu endpoint de API
-
+    async function loadChartsAndTables() {
+        const data = await fetchData('consultar-pertenencia-busqueda', 'POST', { busqueda: '' });
+        if (data && data.pertenencias) {
+            loadObjectTypeChart(data.pertenencias);
+            loadStatusPieChart(data.pertenencias);
+            loadSummaryTable(data.pertenencias);
+            loadAllRecordsTable(data.pertenencias);
+        }
+    }
+    const apiUrl = API_URL + '/pertenencia'; 
     async function fetchData(endpoint, method = 'POST', body = {}) {
-        const token = getCookie('jwt');  // Asume que el token JWT se almacena en el localStorage
-        try {
+        const token = getCookie('jwt');  
             const response = await fetch(`${apiUrl}/${endpoint}`, {
                 method: method,
                 headers: {
@@ -16,25 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             
             handleUnauthorized(response);
-            if (!response.ok) {
-                handleUnauthorized(response)
-                throw new Error(`Error al obtener datos de ${endpoint}: ${response.statusText}`);
-            }
             return await response.json();
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        }
-    }
-
-    async function loadChartsAndTables() {
-        const data = await fetchData('consultar-pertenencia-busqueda', 'POST', { busqueda: '' });
-
-        if (data && data.pertenencias) {
-            loadObjectTypeChart(data.pertenencias);
-            loadStatusPieChart(data.pertenencias);
-            loadSummaryTable(data.pertenencias);
-            loadAllRecordsTable(data.pertenencias);
-        }
     }
 
     function loadObjectTypeChart(pertenencias) {
@@ -44,7 +31,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }, {});
         const labels = Object.keys(objectTypeData);
         const values = Object.values(objectTypeData);
-
 
         const ctx = document.getElementById('objectTypeChart').getContext('2d');
         new Chart(ctx, {
@@ -70,14 +56,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function loadStatusPieChart(pertenencias) {
-        // Inicializar los contadores
         let statusData = {
             Ingresado: 0,
             Salida: 0,
             Extraviado: 0
         };
-    
-        // Reducir los datos para obtener los conteos correctos
         pertenencias.forEach(item => {
             if (item.idEstado === 1) {
                 statusData.Ingresado += 1;
@@ -89,13 +72,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 statusData.Extraviado += 1;
             }
         });
-    
         const labels = Object.keys(statusData);
         const values = Object.values(statusData);
         console.log(labels)
         console.log(values)
         const newLabels = labels.map((label, index) => `[ Estado:${label},n:${values[index]} ]`);
-    
         const ctx = document.getElementById('statusPieChart').getContext('2d');
         new Chart(ctx, {
             type: 'pie',
@@ -130,8 +111,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function loadSummaryTable(pertenencias) {
         const tbody = document.querySelector('table tbody');
-        tbody.innerHTML = '';  // Clear existing rows
-
+        tbody.innerHTML = ''; 
         const groupedData = pertenencias.reduce((acc, item) => {
             const date = item.Fecha.split('_')[0];
             if (!acc[date]) {
@@ -197,9 +177,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
         html2pdf().set(opt).from(element).save();
     }
-
     document.getElementById('downloadPagePdf').addEventListener('click', downloadPagePdf);
 
-    // Load all charts and tables
+
+    
     loadChartsAndTables();
 });
+
+async function fetchExcelFile() {
+    const href = API_URL + "/pertenencia/generar-excel";
+    window.open(href, "_blank");
+}

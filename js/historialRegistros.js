@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
       card.classList.add('card', 'h-100', 'registro-item');
 
       const img = document.createElement('img');
-      img.src = 'https://c439-2001-1388-1e42-b536-b122-4e86-96b7-5d9a.ngrok-free.app/pertenencia/imagen/1_2024-05-27_17-19-48.jpg';
+      img.src = registro.ImagenPertenencia;
       img.alt = registro.nombreObjeto;
       img.classList.add('card-img-top');
       img.loading = 'lazy'; 

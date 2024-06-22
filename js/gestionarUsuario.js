@@ -7,7 +7,7 @@ function getJwtToken() {
 }
 
 function handleUnauthorized(response) {
-    if (response.status === 401) {
+    if (response.status === 403 || response.status === 401 || response.status === 422) {
         logout();
     }
 }

@@ -9,6 +9,7 @@ body {
   font-family: "Montserrat", sans-serif;
   color: #343a40;
 }
+
 .header {
   display: flex;
   justify-content: space-between;
@@ -22,7 +23,7 @@ body {
 }
 
 .container {
-  max-width: 1100px;
+  max-width: 900px;
   margin: 20px auto;
   padding: 20px;
   background-color: #fff;
@@ -36,41 +37,47 @@ body {
   height: auto;
   border: 1px solid black;
   border-radius: 20px;
-  }
-  #canvasObjeto {
-    width: 100%;
-    height: auto;
-    border: 1px solid black;
-    display: none;
-    border-radius: 20px;
-  }
+  margin-bottom: 10px;
+}
 
-  #resultadoObjeto {
-    padding: 10px;
-    margin-top: 15px;
-    font-weight: bold;
-  }
-  
-  .btn {
-    font-size: 16px;
-    margin: 5px 0;
-  }
-  #resultadoObjeto{
-    text-align: start;
-  }
-  
+#canvasObjeto {
+  width: 100%;
+  height: auto;
+  border: 1px solid black;
+  display: none;
+  border-radius: 20px;
+  margin-bottom: 10px;
+}
+
+#resultadoObjeto {
+  padding: 10px;
+  margin-top: 15px;
+  font-weight: bold;
+  text-align: start;
+}
+#infoElement{
+  margin-top: 15px;
+  text-align: start;
+
+}
+
+.btn {
+  font-size: 16px;
+  margin: 5px 0;
+}
+
 .oval-btn {
-    border-radius: 25px; /* Ajusta el valor para controlar la curvatura del óvalo */
-    padding: 8px 16px; /* Ajusta el espacio interno del botón */
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .oval-btn i {
-    margin-right: 8px; /* Ajusta el espacio entre el icono y el texto */
-  }
+  border-radius: 25px;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-  /* Estilo del spinner-box */
+.oval-btn i {
+  margin-right: 8px;
+}
+
 .spinner-box {
   display: flex;
   justify-content: center;
@@ -79,34 +86,97 @@ body {
   margin: 20px 0;
 }
 
-/* Estilo del texto del spinner */
 .spinner-text {
   font-size: 18px;
   font-weight: bold;
 }
 
-/* Estilo del spinner */
 .spinner {
-  border: 8px solid #f3f3f3; /* Color gris claro para el borde */
-  border-top: 8px solid #3498db; /* Color azul para la parte superior */
-  border-radius: 50%; /* Hacer el borde redondo */
-  width: 30px; /* Ancho del spinner */
-  height: 30px; /* Altura del spinner */
-  animation: spin 2s linear infinite; /* Animación de rotación */
+  border: 8px solid #f3f3f3;
+  border-top: 8px solid #3498db;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: spin 2s linear infinite;
 }
 
-/* Definición de la animación de rotación */
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
-.titulo_container {
+
+.coincidencias-container {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0;
-  border-bottom: 1px solid #ccc;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 20px;
 }
-.titulo_container h5{
-  padding: 0;
+
+.pertenencia-container {
+  background-color: #f8f9fa;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.2s;
+}
+
+.pertenencia-container:hover {
+  transform: scale(1.05);
+}
+
+.pertenencia-container img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.pertenencia-container div {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.pertenencia-container button {
+  width: 100%;
+  border-radius: 25px;
+  padding: 8px;
+  font-size: 16px;
+  transition: background-color 0.2s;
+}
+
+.pertenencia-container button:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+#verMasBtn {
+  width: 100%;
+  border-radius: 25px;
+  padding: 8px;
+  font-size: 16px;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+#verMasBtn:hover {
+  background-color: #5a6268;
+}
+
+.estado-ingresada {
+  color: rgb(103, 138, 255);
+}
+
+.estado-salida {
+  color: green;
+}
+
+.estado-extraviada {
+  color: red;
 }

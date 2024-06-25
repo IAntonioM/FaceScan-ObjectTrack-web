@@ -27,25 +27,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function consultarPertenencias(dataPertenencia) {
         mostrarSpinner(true);
+        console.log(dataPertenencia);
         const formData = new FormData();
         formData.append('idEstudiante', dataPertenencia.estudiante.id);
         formData.append('idEstado', '1');
 
-        fetchPertenencias(formData)
+        fetchConsultarRegistros(formData)
             .then(data => {
                 containerResult.style.display = 'block';
-                mostrarInfoEstudiante(data);
+                mostrarInfoEstudiante(dataPertenencia);
                 actualizarVistaPertenencias(data);
                 inicializarCheckboxes();
             })
             .catch(error => {
-                mostrarInfoEstudiante(dataPertenencia); 
+                mostrarInfoEstudiante(dataPertenencia);
                 mostrarIconoResultado(false, error.message);
             });
     }
 
-    function fetchPertenencias(formData) {
-        return fetch(API_URL + '/pertenencia/consultar-pertenencia', {
+    function fetchConsultarRegistros(formData) {
+        return fetch(API_URL + '/pertenencia/consultar-pertenencia-estado-estudiante', {
             method: 'POST',
             headers: {
                 'Authorization': 'Bearer ' + getCookie('jwt'),
@@ -63,15 +64,13 @@ document.addEventListener('DOMContentLoaded', function() {
         checkboxes.forEach((checkbox, index) => {
             const estado = checkbox.checked ? 2 : 3;
             idRegistros.push({
-                idPertenencia: dataPertenencia.objetos[index].idPertenencia,
+                codPertenecia: dataPertenencia.objetos[index].codigo_pertenencia,
                 estado: estado
             });
         });
-        console.log(idRegistros)
+        console.log(idRegistros);
 
-        const requestData = {
-            idRegistros: idRegistros
-        };
+        const requestData = { codPertenciaIdEstado: idRegistros };
 
         fetch(API_URL + '/pertenencia/registrar-salida-pertenencia', {
             method: 'POST',
@@ -82,7 +81,7 @@ document.addEventListener('DOMContentLoaded', function() {
             body: JSON.stringify(requestData)
         })
         .then(handleResponse)
-        .then(data => mostrarIconoResultado(true, 'Registrado correctamente, salida de pertenencias'))
+        .then(() => mostrarIconoResultado(true, 'Registrado correctamente, salida de pertenencias'))
         .catch(error => mostrarIconoResultado(false, 'Error al registrar la salida de pertenencias'));
     }
 
@@ -104,7 +103,9 @@ document.addEventListener('DOMContentLoaded', function() {
     function actualizarVistaPertenencias(data) {
         const pertenenciasContainer = document.getElementById('pertenencias-container');
         pertenenciasContainer.innerHTML = '';
-
+        console.log(data.pertenencias);
+        dataPertenencia.objetos = data.pertenencias; // Asegúrate de actualizar correctamente el dataPertenencia.objetos
+        console.log(dataPertenencia.objetos);
         data.pertenencias.forEach(pertenencia => {
             const pertenenciaDiv = crearPertenenciaDiv(pertenencia);
             pertenenciasContainer.appendChild(pertenenciaDiv);
@@ -116,11 +117,19 @@ document.addEventListener('DOMContentLoaded', function() {
         consultaInfo.innerHTML = `
             <div class="info-row">
                 <div class="info-label">Código Estudiante: </div>
-                <div class="info-value">${dataPertenencia.estudiante.codigo}</div>
+                <div class="info-value">${data.estudiante.codigo}</div>
             </div>
             <div class="info-row">
                 <div class="info-label">Estudiante: </div>
-                <div class="info-value">${dataPertenencia.estudiante.nombre}</div>
+                <div class="info-value">${data.estudiante.nombre}</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Carrera: </div>
+                <div class="info-value">${data.estudiante.carrera}</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Plan: </div>
+                <div class="info-value">${data.estudiante.planEstudiante}</div>
             </div>
             <hr>
             <div class="checkbox-title">
@@ -129,7 +138,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="info-checkbox">
                 <input type="checkbox" id="select-all" class="check-label" checked> Todas Las Pertenencias
             </div>
-            `;
+        `;
         document.getElementById('select-all').addEventListener('change', toggleSelectAll);
     }
 
@@ -147,15 +156,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function toggleSelectAll(event) {
         const isChecked = event.target.checked;
-        if (isChecked) {
-            const checkboxes = document.querySelectorAll('.select-pertenencia');
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = isChecked;
-            });
-        }
+        const checkboxes = document.querySelectorAll('.select-pertenencia');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = isChecked;
+        });
     }
 
     function crearPertenenciaDiv(pertenencia) {
+        console.log(pertenencia.nombre_objeto);
         const pertenenciaDiv = document.createElement('div');
         pertenenciaDiv.classList.add('pertenencia');
 
@@ -165,10 +173,13 @@ document.addEventListener('DOMContentLoaded', function() {
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
         checkbox.classList.add('select-pertenencia');
-        checkbox.checked = true; // Inicializa los checkboxes en true
+        checkbox.checked = true;
+
+        const codigoPerte = document.createElement('h4');
+        codigoPerte.textContent = "C. Pertenencia : " + pertenencia.codigo_pertenencia;
 
         const imgElement = document.createElement('img');
-        imgElement.src = pertenencia.ImagenPertenencia;
+        imgElement.src = pertenencia.imagen_pertenencia;
         imgElement.alt = 'Imagen de la Pertenencia';
         imgElement.classList.add('pertenencia-img');
 
@@ -176,19 +187,23 @@ document.addEventListener('DOMContentLoaded', function() {
         pertenenciaInfo.classList.add('pertenencia-info');
 
         const nombreObjeto = document.createElement('h4');
-        nombreObjeto.textContent = pertenencia.nombreObjeto;
+        nombreObjeto.textContent = pertenencia.nombre_objeto;
+
+        const estadoAct = document.createElement('h4');
+        estadoAct.textContent = "Estado Actual: " + pertenencia.nombre_estado;
 
         const fechaElement = document.createElement('p');
         const horaElement = document.createElement('p');
 
-        const fechaHora = convertirFecha(pertenencia.Fecha);
+        const fechaHora = convertirFecha(pertenencia.hora_entrada);
         fechaElement.textContent = `Fecha: ${fechaHora.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`;
         horaElement.textContent = `Hora: ${fechaHora.toLocaleTimeString('es-ES', { hour: 'numeric', minute: 'numeric', second: 'numeric' })}`;
 
+        pertenenciaInfo.appendChild(codigoPerte);
         pertenenciaInfo.appendChild(nombreObjeto);
         pertenenciaInfo.appendChild(fechaElement);
         pertenenciaInfo.appendChild(horaElement);
-
+        pertenenciaInfo.appendChild(estadoAct);
         checkboxContainer.appendChild(checkbox);
         checkboxContainer.appendChild(imgElement);
 
@@ -218,4 +233,5 @@ document.addEventListener('DOMContentLoaded', function() {
         spinnerObjeto.style.display = mostrar ? 'flex' : 'none';
     }
 });
+
 

@@ -15,9 +15,10 @@ document.addEventListener('DOMContentLoaded', function() {
         validarDatos();
         window.addEventListener('message', manejoDeVentanas);
     }
-
     function abrirVentanaIdentificarObjeto() {
-        window.open('identificar-objeto.html', '_blank');
+        let idEstudiante = data.estudiante.id;
+        let url = 'identificar-objeto.html?idEstudiante=' + idEstudiante;
+        window.open(url, '_blank');
     }
 
     function validarDatos() {
@@ -44,15 +45,37 @@ document.addEventListener('DOMContentLoaded', function() {
         const formData = new FormData();
         formData.append('file', file);
         formData.append('idEstudiante', data.estudiante.id);
-        formData.append('idObjeto', data.objeto.id);
+        formData.append('idObjeto', data.objeto.idObjeto);
+        console.log(data)
+        if(data.objeto.tipoRegistro == "coincidencias"){
+            console.log(data.objeto)
+            formData.append('codigoPertenencia', data.objeto.codigoPertenencia);
+            fetchRegistrarIngresoPertenecia(formData)
+                .then(data => mostrarIconoResultado(true, data.message))
+                .catch(error => handleErrorResponse(error));
 
-        fetchPertenencia(formData)
-            .then(data => mostrarIconoResultado(true, data.message))
-            .catch(error => handleErrorResponse(error));
+        }else{
+            fetchRegistrarPertenencia(formData)
+                .then(data => mostrarIconoResultado(true, data.message))
+                .catch(error => handleErrorResponse(error));
+
+        }
     }
 
-    function fetchPertenencia(formData) {
-        return fetch(API_URL + '/pertenencia/registrar-pertenencia', {
+    function fetchRegistrarIngresoPertenecia(formData) {
+        return fetch(API_URL + '/pertenencia/registrar-ingreso-pertenencia', {
+            method: 'POST',
+            headers: {
+                'Authorization': 'Bearer ' + getCookie('jwt'),
+            },
+            body: formData
+        })
+        .then(handleResponse)
+        .then(response => response.json());
+    }
+
+    function fetchRegistrarPertenencia(formData) {
+        return fetch(API_URL + '/pertenencia/nueva-pertenencia', {
             method: 'POST',
             headers: {
                 'Authorization': 'Bearer ' + getCookie('jwt'),
@@ -95,13 +118,33 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="info-row">
                     <div class="info-label">Estudiante: </div>
                     <div class="info-value">${data.estudiante.nombre}</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Carrera: </div>
+                    <div class="info-value">${data.estudiante.carrera}</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Plan: </div>
+                    <div class="info-value">${data.estudiante.planEstudiante}</div>
                 </div>`;
         }
         if (data.objeto) {
             content += `
                 <div class="info-row">
+                    <div class="info-label">Codigo Pertenencia</div>
+                    <div class="info-value">${data.objeto.codigoPertenencia}</div>
+                </div>
+                <div class="info-row">
                     <div class="info-label">Objeto:</div>
                     <div class="info-value">${data.objeto.objeto}</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Ultima Fecha Actividad:</div>
+                    <div class="info-value">${data.objeto.fechaUltimaActividad}</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Ultimo Estado:</div>
+                    <div class="info-value">${data.objeto.ultimoEstado}</div>
                 </div>
                 <div class="info-row">
                     <div class="info-label">Imagen:</div>

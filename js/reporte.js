@@ -1,23 +1,33 @@
 document.addEventListener('DOMContentLoaded', function() {
     async function loadChartsAndTables() {
-        const data = await fetchData('consultar-pertenencia-busqueda', 'POST', { busqueda: '' });
+        const data = await fetchData('consulta-reporte', 'POST');
+        console.log(data)
         if (data && data.pertenencias) {
             loadObjectTypeChart(data.pertenencias);
             loadStatusPieChart(data.pertenencias);
-            loadSummaryTable(data.pertenencias);
-            loadAllRecordsTable(data.pertenencias);
+            loadSummaryTable(data.registros);
+            loadAllRecordsTable(data.registros);
         }
     }
+    function crearDataFormulario(data) {
+        const formData = new FormData();
+        for (const key in data) {
+          formData.append(key, data[key]);
+        }
+        return formData;
+      }
     const apiUrl = API_URL + '/pertenencia'; 
-    async function fetchData(endpoint, method = 'POST', body = {}) {
+    async function fetchData(endpoint, method = 'POST') {
+        searchText=""
+        const formData = crearDataFormulario({ datosEstudiante: "Antonio" });
+        console.log(formData.get('datosEstudiante'))
         const token = getCookie('jwt');  
             const response = await fetch(`${apiUrl}/${endpoint}`, {
                 method: method,
                 headers: {
-                    'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify(body)
+                body: formData
             });
             
             handleUnauthorized(response);
@@ -25,8 +35,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function loadObjectTypeChart(pertenencias) {
+        console.log(pertenencias)
         const objectTypeData = pertenencias.reduce((acc, item) => {
-            acc[item.nombreObjeto] = (acc[item.nombreObjeto] || 0) + 1;
+            acc[item.nombre_objeto] = (acc[item.nombre_objeto] || 0) + 1;
             return acc;
         }, {});
         const labels = Object.keys(objectTypeData);
@@ -56,18 +67,19 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function loadStatusPieChart(pertenencias) {
+        console.log(pertenencias)
         let statusData = {
             Ingresado: 0,
             Salida: 0,
             Extraviado: 0
         };
         pertenencias.forEach(item => {
-            if (item.idEstado === 1) {
+            if (item.id_estado === 1) {
                 statusData.Ingresado += 1;
-            } else if (item.idEstado === 2) {
+            } else if (item.id_estado === 2) {
                 statusData.Ingresado += 1;
                 statusData.Salida += 1;
-            } else if (item.idEstado === 3) {
+            } else if (item.id_estado === 3) {
                 statusData.Ingresado += 1;
                 statusData.Extraviado += 1;
             }
@@ -109,20 +121,20 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    function loadSummaryTable(pertenencias) {
+    function loadSummaryTable(registros) {
         const tbody = document.querySelector('table tbody');
         tbody.innerHTML = ''; 
-        const groupedData = pertenencias.reduce((acc, item) => {
-            const date = item.Fecha.split('_')[0];
+        const groupedData = registros.reduce((acc, item) => {
+            const date = item.hora_entrada.split('_')[0];
             if (!acc[date]) {
                 acc[date] = { entradas: 0, salidas: 0, extraviada: 0, total: 0 };
             }
-            if (item.Estado === 'Ingresada') {
+            if (item.estado === 'Ingresada') {
                 acc[date].entradas += 1;
-            } else if (item.Estado === 'Salida') {
+            } else if (item.estado === 'Salida') {
                 acc[date].entradas += 1;
                 acc[date].salidas += 1;
-            } else if (item.Estado === 'Extraviada') {
+            } else if (item.estado === 'Extraviada') {
                 acc[date].entradas += 1;
                 acc[date].extraviada += 1;
             }
@@ -145,21 +157,21 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    function loadAllRecordsTable(pertenencias) {
+    function loadAllRecordsTable(registros) {
         const tbody = document.querySelector('#allRecordsTable tbody');
         tbody.innerHTML = '';  // Clear existing rows
 
-        pertenencias.forEach(item => {
+        registros.forEach(item => {
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td>${item.idPertenencia}</td>
-                <td>${item.idEstudiante}</td>
-                <td>${item.idObjeto}</td>
-                <td>${item.Estado}</td>
-                <td>${item.Fecha}</td>
-                <td>${item.nombreObjeto}</td>
-                <td>${item.nombresEstudiante}</td>
-                <td><img src="${item.ImagenPertenencia}" alt="Imagen Pertenencia" width="50" loading="lazy" ></td>
+                <td>${item.id_registro}</td>
+                <td>${item.id_estudiante}</td>
+                <td>${item.id_objeto}</td>
+                <td>${item.estado}</td>
+                <td>${item.hora_entrada}</td>
+                <td>${item.nombre_objeto}</td>
+                <td>${item.nombres_estudiante}</td>
+                <td><img src="${item.imagen_pertenencia}" alt="Imagen Pertenencia" width="50" loading="lazy" ></td>
             `;
             tbody.appendChild(row);
         });

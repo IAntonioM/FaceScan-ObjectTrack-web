@@ -6,7 +6,7 @@
   <title>Registrar Pertenencia</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="../css/identificar-estudiante.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous">
 </head>
 <body>
   <div class="header">
@@ -15,7 +15,6 @@
   </div>
   <div class="container">
     <div class="titulo_container">
-      <p></p>
       <button id="toggleCameraButton" class="btn btn-primary">  <i class="fa-solid fa-arrows-rotate"></i> Voltear</button>
     </div>
     <video id="videoElement" autoplay playsinline></video>
@@ -32,12 +31,10 @@
       <span id="porcentaje-progreso">0%</span>
       <p id="mensaje-progreso">Sin Resultados ...</p>
     </div>
-    <button id="retryBtn" class="btn btn-warning" style="display: none;">Reintentar</button>
-    <div id="resultadoEstudiante">
-      Sin Resultados de Busqueda
-    </div>
+    <button id="retryBtn" class="btn btn-warning" style="display: none;"> <i class="fa-solid fa-rotate-right"></i> Reintentar</button>
+    <div id="resultadoEstudiante">Sin Resultados de Busqueda</div>
     <div class="d-flex justify-content-end" style="width: 100%;">
-      <button class="btn btn-primary" id="nextBtn" style="display: none;">Siguiente >></button>
+      <button class="btn btn-primary" id="nextBtn" style="display: none;">Siguiente <i class="fa-solid fa-arrow-right"></i> </button>
     </div>
   </div>
   <script src="../js/identificar-estudiante.js"></script>

@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', function() {
               if (data.pertenencias_coincidencia.length > 1) {
                 const verMasBtn = document.createElement('button');
                 verMasBtn.id = 'verMasBtn';
-                verMasBtn.innerText = 'Ver más';
+                verMasBtn.innerText = 'Ver más ...';
                 verMasBtn.addEventListener('click', () => {
                   for (let i = 1; i < data.pertenencias_coincidencia.length; i++) {
                     mostrarPertenencia(data.pertenencias_coincidencia[i], idObjeto, objeto, recorteImage);
@@ -110,7 +110,6 @@ document.addEventListener('DOMContentLoaded', function() {
               const pertenenciaContainer = document.createElement('div');
               listaConcidencia.appendChild(pertenenciaContainer);
             }
-
             nextBtn.addEventListener('click', () => {
               const confirmationMessage = 'Vas a registrar este objeto como una nueva pertenencia. ¿Deseas continuar?';
               if (confirm(confirmationMessage)) {
@@ -120,7 +119,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     idObjeto: idObjeto,
                     objeto: objeto,
                     imgUri: recorteImage,
-                    tipoRegistro: estado // assuming 'estado' is defined in the scope
+                    tipoRegistro: "sin_registro" // assuming 'estado' is defined in the scope
                   }
                 };
                 console.log(datosObjeto);
@@ -187,8 +186,10 @@ document.addEventListener('DOMContentLoaded', function() {
     
     infoElement.innerHTML = `
       Código Pertenencia: ${codigoPertenencia}<br>
-      Última Actividad: <br>${fechaUltimaActividad}<br>
       Último Estado: <span class="${estadoClass}">${ultimoEstado}</span><br>
+      Última Actividad: <br>
+      Fecha: ${convertirFechaTexto(fechaUltimaActividad, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}<br>
+      Hora: ${convertirFechaTexto(fechaUltimaActividad, { hour: 'numeric', minute: 'numeric', second: 'numeric' })}<br>
     `;
 
     const selectBtn = document.createElement('button');
@@ -245,5 +246,16 @@ document.addEventListener('DOMContentLoaded', function() {
     listaConcidencia.innerHTML = '';
   });
 
+function convertirFechaTexto(fecha, opciones) {
+const fechaHora = convertirFecha(fecha);
+return fechaHora.toLocaleString('es-ES', opciones);
+}
+
+function convertirFecha(fecha) {
+const [datePart, timePart] = fecha.split('_');
+const [year, month, day] = datePart.split('-');
+const [hour, minute, second] = timePart.split('-');
+return new Date(year, month - 1, day, hour, minute, second);
+}
   
 });

@@ -141,7 +141,7 @@ document.addEventListener('DOMContentLoaded', function() {
   function createCardFooter(registro) {
     const cardFooter = document.createElement('div');
     cardFooter.classList.add('card-footer');
-    const UltimaActividad = createFooterSpan('Tipo', "Datos de Ultima Actividad");
+    const UltimaActividad = createFooterSpan('Datos', " De la Ultima Actividad");
     const estadoSpan = createFooterSpan('Estado', registro.nombre_estado);
     const fechaSpan = createFooterSpan('Fecha', convertirFechaTexto(registro.hora_ultima_actividad, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }));
     const horaSpan = createFooterSpan('Hora', convertirFechaTexto(registro.hora_ultima_actividad, { hour: 'numeric', minute: 'numeric', second: 'numeric' }));

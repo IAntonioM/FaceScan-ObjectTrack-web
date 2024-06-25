@@ -187,7 +187,7 @@ document.addEventListener('DOMContentLoaded', function() {
         pertenenciaInfo.classList.add('pertenencia-info');
 
         const nombreObjeto = document.createElement('h4');
-        nombreObjeto.textContent = pertenencia.nombre_objeto;
+        nombreObjeto.textContent = "Objeto: "+pertenencia.nombre_objeto;
 
         const estadoAct = document.createElement('h4');
         estadoAct.textContent = "Estado Actual: " + pertenencia.nombre_estado;

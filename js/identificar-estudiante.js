@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
   validTokenSession();
 
   // Iniciar variables
-  const videoElement = document.getElementById('videoElement');
+  
   const searchEstudianteBtn = document.getElementById('searchEstudianteBtn');
   const retryBtn = document.getElementById('retryBtn');
   const canvas = document.getElementById('canvas');
@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
   let stream;
 
   // Iniciar cámara
+  const videoElement = document.getElementById('videoElement');
   function initCameraAccess(videoElement, isFrontCamera) {
     const facingMode = isFrontCamera ? 'user' : 'environment';
     navigator.mediaDevices.getUserMedia({ video: { facingMode } })
@@ -51,11 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
     return canvas.toDataURL("image/jpeg");
   }
 
-  function crearFormData(file) {
-    const formData = new FormData();
-    formData.append('file', file);
-    return formData;
-  }
+
 
   // Enviar imagen al API
   function iniciarReconocimientoFacial() {
@@ -71,8 +68,9 @@ document.addEventListener('DOMContentLoaded', function() {
   function enviarFoto(coincidencias=[], intentos=0) {
     if (intentos < maxIntentos) {
       const imagenURI = capturarImagen(videoElement, canvas);
-      const file = dataURItoFile(imagenURI, 'photo.jpg');
-      const formData = crearFormData(file);
+      const imagen = dataURItoFile(imagenURI, 'photo.jpg');
+      const formData = new FormData();
+      formData.append('file', imagen);
       mostrarSpinner(true);
       fetch(API_URL + '/estudiante/reconocimiento-facial', {
         method: 'POST',

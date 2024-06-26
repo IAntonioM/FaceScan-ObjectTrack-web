@@ -5,19 +5,18 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   validTokenSession();
-
-  const videoElementObjeto = document.getElementById('videoObjeto');
   const captureBtnObjeto = document.getElementById('captureBtnObjeto');
   const retryBtnObjeto = document.getElementById('retryBtnObjeto');
   const canvasObjeto = document.getElementById('canvasObjeto');
-  const nextBtn = document.getElementById('nextBtn');
-  const listaConcidencia = document.getElementById('listaCoincidencia');
+  const nuevaPerteencia = document.getElementById('nextBtn');
   const spinnerObjeto = document.getElementsByClassName('spinner-box')[0];
+  const listaConcidencia = document.getElementById('listaCoincidencia');
   let datosObjeto = null;
 
   // Obtener acceso a la cámara
-  getCameraAccess(videoElementObjeto);
 
+  const videoElementObjeto = document.getElementById('videoObjeto');
+  getCameraAccess(videoElementObjeto);
   function getCameraAccess(videoElement, facingMode = 'environment') {
     navigator.mediaDevices.getUserMedia({
       video: { facingMode }
@@ -68,27 +67,26 @@ document.addEventListener('DOMContentLoaded', function() {
             enviarFoto();
           } else if (response.ok) {
             spinnerObjeto.style.display = 'none';
-            nextBtn.style.display = 'inline-block';
+            nuevaPerteencia.style.display = 'inline-block';
             objetoEncontrado = true;
             return response.json();
           }
         })
         .then(data => {
           if (data) {
-            console.log(data);
+            
             if (objetoEncontrado) {
               retryBtnObjeto.style.display = 'inline-block';
               canvasObjeto.style.display = 'block';
               videoElementObjeto.style.display = 'none';
               listaConcidencia.innerHTML = '';
             }
+
             const objeto = data.nombreObjeto || 'No disponible';
-              
             resultadoObjeto.innerHTML = 'Objeto : '+objeto;
             const idObjeto = data.idObjeto || 'No disponible';
             const estado = data.estado || 'No disponible';
             const recorteImage = data.imagenRecortada || '';
-
             if (estado === "coincidencias") {
               listaConcidencia.innerHTML = '<hr> Pertenencias del Estudiante segun coincidencia: ';
               mostrarPertenencia(data.pertenencias_coincidencia[0], idObjeto, objeto, recorteImage);
@@ -110,7 +108,7 @@ document.addEventListener('DOMContentLoaded', function() {
               const pertenenciaContainer = document.createElement('div');
               listaConcidencia.appendChild(pertenenciaContainer);
             }
-            nextBtn.addEventListener('click', () => {
+            nuevaPerteencia.addEventListener('click', () => {
               const confirmationMessage = 'Vas a registrar este objeto como una nueva pertenencia. ¿Deseas continuar?';
               if (confirm(confirmationMessage)) {
                 const datosObjeto = {
@@ -147,74 +145,50 @@ document.addEventListener('DOMContentLoaded', function() {
     enviarFoto();
   }
 
-  function mostrarPertenencia(pertenencia, idObjeto, objeto, recorteImage) {
-    const codigoPertenencia = pertenencia.codigo_pertenencia || 'No disponible';
-    const fechaUltimaActividad = pertenencia.fecha_ultima_actividad || 'No disponible';
-    const ultimoEstado = pertenencia.ultimo_estado || 'No disponible';
-    const imagenPertenencia = pertenencia.imagen_pertenencia || '';
+  const mostrarPertenencia = (pertenencia, idObjeto, objeto, recorteImage) => {
+    const { codigo_pertenencia = 'No disponible', fecha_ultima_actividad = 'No disponible', ultimo_estado = 'No disponible', imagen_pertenencia = '' } = pertenencia;
 
-    // Dibujar la imagen recortada en el canvas
     const context = canvasObjeto.getContext('2d');
     const img = new Image();
-
-    img.onload = function() {
+    img.onload = () => {
       canvasObjeto.width = img.width;
       canvasObjeto.height = img.height;
       context.drawImage(img, 0, 0, canvasObjeto.width, canvasObjeto.height);
     };
-
     img.src = recorteImage;
-    resultadoObjeto.innerHTML = `Objeto: ${objeto}<br>`;
 
-    const imgElement = document.createElement('img');
-    imgElement.src = imagenPertenencia;
-    imgElement.alt = `Imagen Pertenencia ${codigoPertenencia}`;
-    imgElement.style.width = '200px';
+    const estadoClass = {
+      'Ingresada': 'estado-ingresada',
+      'Salida': 'estado-salida',
+      'Extraviada': 'estado-extraviada'
+    }[ultimo_estado] || '';
 
-    // Determine the class for the ultimoEstado
-    let estadoClass = '';
-    if (ultimoEstado === 'Ingresada') {
-      estadoClass = 'estado-ingresada';
-    } else if (ultimoEstado === 'Salida') {
-      estadoClass = 'estado-salida';
-    } else if (ultimoEstado === 'Extraviada') {
-      estadoClass = 'estado-extraviada';
-    }
-
-    const infoElement = document.createElement('div');
-    infoElement.id = 'infoElement'; // Agregar el id 'infoElement'
-    
-    infoElement.innerHTML = `
-      Código Pertenencia: ${codigoPertenencia}<br>
-      Último Estado: <span class="${estadoClass}">${ultimoEstado}</span><br>
-      Última Actividad: <br>
-      Fecha: ${convertirFechaTexto(fechaUltimaActividad, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}<br>
-      Hora: ${convertirFechaTexto(fechaUltimaActividad, { hour: 'numeric', minute: 'numeric', second: 'numeric' })}<br>
+    const pertenenciaHTML = `
+      <div class="pertenencia-container">
+        <img src="${imagen_pertenencia}" alt="Imagen Pertenencia ${codigo_pertenencia}" style="width: 200px;">
+        <div id="infoElement">
+          Código Pertenencia: ${codigo_pertenencia}<br>
+          Último Estado: <span class="${estadoClass}">${ultimo_estado}</span><br>
+          Última Actividad: <br>
+          Fecha: ${convertirFechaTexto(fecha_ultima_actividad, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}<br>
+          Hora: ${convertirFechaTexto(fecha_ultima_actividad, { hour: 'numeric', minute: 'numeric', second: 'numeric' })}<br>
+        </div>
+        <button class="selectBtn">Seleccionar</button>
+      </div>
     `;
+    listaConcidencia.insertAdjacentHTML('beforeend', pertenenciaHTML);
 
-    const selectBtn = document.createElement('button');
-    selectBtn.innerText = 'Seleccionar';
+    const selectBtn = listaConcidencia.querySelector('.pertenencia-container:last-child .selectBtn');
     selectBtn.addEventListener('click', () => {
-      const estado = pertenencia.ultimo_estado || 'No disponible';
-      let confirmationMessage = '';
-      if (estado === 'Ingresada' || estado === 'Extraviada') {
-        confirmationMessage = `Esta pertenencia está marcada como ${estado.toLowerCase()}. ¿Deseas continuar?`;
-        if (!confirm(confirmationMessage)) {
-          return;
-        }
-      }
+      if (['Ingresada', 'Extraviada'].includes(ultimo_estado) && !confirm(`Esta pertenencia está marcada como 
+        ${ultimo_estado.toLowerCase()}. ¿Deseas continuar?`)) return;
 
       const datosObjeto = {
         type: 'ObjetoData',
-        payload: {
-          codigoPertenencia: codigoPertenencia,
-          idObjeto: idObjeto,
-          objeto: objeto,
-          fechaUltimaActividad: fechaUltimaActividad,
-          ultimoEstado: ultimoEstado,
-          imgUri: recorteImage,
-          tipoRegistro: 'coincidencias'
-        }
+        payload: {  codigoPertenencia: codigo_pertenencia, idObjeto, objeto,
+                    fechaUltimaActividad: fecha_ultima_actividad,
+                    ultimoEstado: ultimo_estado,
+                    imgUri: recorteImage, tipoRegistro: 'coincidencias' }
       };
       console.log(datosObjeto);
       if (datosObjeto) {
@@ -222,14 +196,8 @@ document.addEventListener('DOMContentLoaded', function() {
         window.close();
       }
     });
-
-    const pertenenciaContainer = document.createElement('div');
-    pertenenciaContainer.classList.add('pertenencia-container');
-    pertenenciaContainer.appendChild(imgElement);
-    pertenenciaContainer.appendChild(infoElement);
-    pertenenciaContainer.appendChild(selectBtn);
-    listaConcidencia.appendChild(pertenenciaContainer);
-  }
+    resultadoObjeto.innerHTML = `Objeto: ${objeto}<br>`;
+  };
 
   captureBtnObjeto.addEventListener('click', () => {
     videoElementObjeto.style.display = 'block';
@@ -238,7 +206,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   retryBtnObjeto.addEventListener('click', () => {
-    nextBtn.style.display = 'none';
+    nuevaPerteencia.style.display = 'none';
     videoElementObjeto.style.display = 'block';
     canvasObjeto.style.display = 'none';
     captureBtnObjeto.style.display = 'inline-block';

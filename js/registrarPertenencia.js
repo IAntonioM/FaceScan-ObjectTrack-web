@@ -111,42 +111,26 @@ document.addEventListener('DOMContentLoaded', function() {
         let content = `<h2>Información del Registro</h2><br>`;
         if (data.estudiante) {
             content += `
-                <div class="info-row">
-                    <div class="info-label">Código Estudiante: </div>
-                    <div class="info-value">${data.estudiante.codigo}</div>
-                </div>
-                <div class="info-row">
+                <div class="info-row"><div class="info-label">Código Estudiante: </div>
+                    <div class="info-value">${data.estudiante.codigo}</div></div><div class="info-row">
                     <div class="info-label">Estudiante: </div>
-                    <div class="info-value">${data.estudiante.nombre}</div>
-                </div>
-                <div class="info-row">
+                    <div class="info-value">${data.estudiante.nombre}</div></div><div class="info-row">
                     <div class="info-label">Carrera: </div>
-                    <div class="info-value">${data.estudiante.carrera}</div>
-                </div>
-                <div class="info-row">
+                    <div class="info-value">${data.estudiante.carrera}</div></div><div class="info-row">
                     <div class="info-label">Plan: </div>
-                    <div class="info-value">${data.estudiante.planEstudiante}</div>
-                </div>`;
+                    <div class="info-value">${data.estudiante.planEstudiante}</div></div>`;
         }
         if (data.objeto) {
             content += `
                 <div class="info-row">
                     <div class="info-label">Codigo Pertenencia</div>
-                    <div class="info-value">${data.objeto.codigoPertenencia}</div>
-                </div>
-                <div class="info-row">
+                    <div class="info-value">${data.objeto.codigoPertenencia}</div></div><div class="info-row">
                     <div class="info-label">Objeto:</div>
-                    <div class="info-value">${data.objeto.objeto}</div>
-                </div>
-                <div class="info-row">
+                    <div class="info-value">${data.objeto.objeto}</div></div><div class="info-row">
                     <div class="info-label">Ultima Fecha Actividad:</div>
-                    <div class="info-value">${data.objeto.fechaUltimaActividad}</div>
-                </div>
-                <div class="info-row">
+                    <div class="info-value">${data.objeto.fechaUltimaActividad}</div></div><div class="info-row">
                     <div class="info-label">Ultimo Estado:</div>
-                    <div class="info-value">${data.objeto.ultimoEstado}</div>
-                </div>
-                <div class="info-row">
+                    <div class="info-value">${data.objeto.ultimoEstado}</div></div><div class="info-row">
                     <div class="info-label">Imagen:</div>
                     <div class="info-value"><img src="${data.objeto.imgUri}" alt="${data.objeto.objeto}" class="objeto-img"></div>
                 </div>`;

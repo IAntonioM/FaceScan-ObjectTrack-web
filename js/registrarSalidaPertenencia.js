@@ -28,11 +28,8 @@ document.addEventListener('DOMContentLoaded', function() {
     function consultarPertenencias(dataPertenencia) {
         mostrarSpinner(true);
         console.log(dataPertenencia);
-        const formData = new FormData();
-        formData.append('idEstudiante', dataPertenencia.estudiante.id);
-        formData.append('idEstado', '1');
 
-        fetchConsultarRegistros(formData)
+        fetchConsultarRegistros()
             .then(data => {
                 containerResult.style.display = 'block';
                 mostrarInfoEstudiante(dataPertenencia);
@@ -45,7 +42,10 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
 
-    function fetchConsultarRegistros(formData) {
+    function fetchConsultarRegistros() {
+        const formData = new FormData();
+        formData.append('idEstudiante', dataPertenencia.estudiante.id);
+        formData.append('idEstado', '1');
         return fetch(API_URL + '/pertenencia/consultar-pertenencia-estado-estudiante', {
             method: 'POST',
             headers: {
@@ -107,7 +107,25 @@ document.addEventListener('DOMContentLoaded', function() {
         dataPertenencia.objetos = data.pertenencias; // Asegúrate de actualizar correctamente el dataPertenencia.objetos
         console.log(dataPertenencia.objetos);
         data.pertenencias.forEach(pertenencia => {
-            const pertenenciaDiv = crearPertenenciaDiv(pertenencia);
+            const fechaHora = convertirFecha(pertenencia.hora_entrada);
+            const fechaTexto = fechaHora.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            const horaTexto = fechaHora.toLocaleTimeString('es-ES', { hour: 'numeric', minute: 'numeric', second: 'numeric' });
+        
+            const pertenenciaDiv = document.createElement('div');
+            pertenenciaDiv.classList.add('pertenencia');
+            pertenenciaDiv.innerHTML = `
+                <div class="checkbox-container">
+                    <input type="checkbox" class="select-pertenencia" checked>
+                    <img src="${pertenencia.imagen_pertenencia}" alt="Imagen de la Pertenencia" class="pertenencia-img">
+                </div>
+                <div class="pertenencia-info">
+                    <h4>C. Pertenencia : ${pertenencia.codigo_pertenencia}</h4>
+                    <h4>Objeto: ${pertenencia.nombre_objeto}</h4>
+                    <p>Fecha: ${fechaTexto}</p>
+                    <p>Hora: ${horaTexto}</p>
+                    <h4>Estado Actual: ${pertenencia.nombre_estado}</h4>
+                </div>
+            `;
             pertenenciasContainer.appendChild(pertenenciaDiv);
         });
     }
@@ -163,53 +181,27 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function crearPertenenciaDiv(pertenencia) {
-        console.log(pertenencia.nombre_objeto);
+    
+        const fechaHora = convertirFecha(pertenencia.hora_entrada);
+        const fechaTexto = fechaHora.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        const horaTexto = fechaHora.toLocaleTimeString('es-ES', { hour: 'numeric', minute: 'numeric', second: 'numeric' });
+    
         const pertenenciaDiv = document.createElement('div');
         pertenenciaDiv.classList.add('pertenencia');
-
-        const checkboxContainer = document.createElement('div');
-        checkboxContainer.classList.add('checkbox-container');
-
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.classList.add('select-pertenencia');
-        checkbox.checked = true;
-
-        const codigoPerte = document.createElement('h4');
-        codigoPerte.textContent = "C. Pertenencia : " + pertenencia.codigo_pertenencia;
-
-        const imgElement = document.createElement('img');
-        imgElement.src = pertenencia.imagen_pertenencia;
-        imgElement.alt = 'Imagen de la Pertenencia';
-        imgElement.classList.add('pertenencia-img');
-
-        const pertenenciaInfo = document.createElement('div');
-        pertenenciaInfo.classList.add('pertenencia-info');
-
-        const nombreObjeto = document.createElement('h4');
-        nombreObjeto.textContent = "Objeto: "+pertenencia.nombre_objeto;
-
-        const estadoAct = document.createElement('h4');
-        estadoAct.textContent = "Estado Actual: " + pertenencia.nombre_estado;
-
-        const fechaElement = document.createElement('p');
-        const horaElement = document.createElement('p');
-
-        const fechaHora = convertirFecha(pertenencia.hora_entrada);
-        fechaElement.textContent = `Fecha: ${fechaHora.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`;
-        horaElement.textContent = `Hora: ${fechaHora.toLocaleTimeString('es-ES', { hour: 'numeric', minute: 'numeric', second: 'numeric' })}`;
-
-        pertenenciaInfo.appendChild(codigoPerte);
-        pertenenciaInfo.appendChild(nombreObjeto);
-        pertenenciaInfo.appendChild(fechaElement);
-        pertenenciaInfo.appendChild(horaElement);
-        pertenenciaInfo.appendChild(estadoAct);
-        checkboxContainer.appendChild(checkbox);
-        checkboxContainer.appendChild(imgElement);
-
-        pertenenciaDiv.appendChild(checkboxContainer);
-        pertenenciaDiv.appendChild(pertenenciaInfo);
-
+        pertenenciaDiv.innerHTML = `
+            <div class="checkbox-container">
+                <input type="checkbox" class="select-pertenencia" checked>
+                <img src="${pertenencia.imagen_pertenencia}" alt="Imagen de la Pertenencia" class="pertenencia-img">
+            </div>
+            <div class="pertenencia-info">
+                <h4>C. Pertenencia : ${pertenencia.codigo_pertenencia}</h4>
+                <h4>Objeto: ${pertenencia.nombre_objeto}</h4>
+                <p>Fecha: ${fechaTexto}</p>
+                <p>Hora: ${horaTexto}</p>
+                <h4>Estado Actual: ${pertenencia.nombre_estado}</h4>
+            </div>
+        `;
+    
         return pertenenciaDiv;
     }
 

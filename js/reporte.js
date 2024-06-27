@@ -1,41 +1,46 @@
 document.addEventListener('DOMContentLoaded', function() {
-    async function loadChartsAndTables() {
-        const data = await fetchData('consulta-reporte', 'POST');
-        console.log(data)
+    let objectTypeChart;
+    let statusPieChart;
+
+    async function loadChartsAndTables(filters = {}) {
+        const data = await fetchData('consulta-reporte', 'POST', filters);
         if (data && data.pertenencias) {
+            if (objectTypeChart) {
+                objectTypeChart.destroy();
+            }
+            if (statusPieChart) {
+                statusPieChart.destroy();
+            }
             loadObjectTypeChart(data.pertenencias);
             loadStatusPieChart(data.pertenencias);
             loadSummaryTable(data.registros);
             loadAllRecordsTable(data.registros);
         }
     }
+
     function crearDataFormulario(data) {
         const formData = new FormData();
         for (const key in data) {
-          formData.append(key, data[key]);
+            formData.append(key, data[key]);
         }
         return formData;
-      }
-    const apiUrl = API_URL + '/pertenencia'; 
-    async function fetchData(endpoint, method = 'POST') {
-        searchText=""
-        const formData = crearDataFormulario({ datosEstudiante: "Antonio" });
-        console.log(formData.get('datosEstudiante'))
-        const token = getCookie('jwt');  
-            const response = await fetch(`${apiUrl}/${endpoint}`, {
-                method: method,
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                },
-                body: formData
-            });
-            
-            handleUnauthorized(response);
-            return await response.json();
+    }
+
+    async function fetchData(endpoint, method = 'POST', filters = {}) {
+        const formData = crearDataFormulario(filters);
+        const token = getCookie('jwt');
+        const response = await fetch(`${API_URL}/pertenencia/${endpoint}`, {
+            method: method,
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+            body: formData
+        });
+        handleUnauthorized(response);
+        return await response.json();
     }
 
     function loadObjectTypeChart(pertenencias) {
-        console.log(pertenencias)
         const objectTypeData = pertenencias.reduce((acc, item) => {
             acc[item.nombre_objeto] = (acc[item.nombre_objeto] || 0) + 1;
             return acc;
@@ -44,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const values = Object.values(objectTypeData);
 
         const ctx = document.getElementById('objectTypeChart').getContext('2d');
-        new Chart(ctx, {
+        objectTypeChart = new Chart(ctx, {
             type: 'bar',
             data: {
                 labels: labels,
@@ -67,7 +72,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function loadStatusPieChart(pertenencias) {
-        console.log(pertenencias)
         let statusData = {
             Ingresado: 0,
             Salida: 0,
@@ -86,11 +90,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         const labels = Object.keys(statusData);
         const values = Object.values(statusData);
-        console.log(labels)
-        console.log(values)
         const newLabels = labels.map((label, index) => `[ Estado:${label},n:${values[index]} ]`);
         const ctx = document.getElementById('statusPieChart').getContext('2d');
-        new Chart(ctx, {
+        statusPieChart = new Chart(ctx, {
             type: 'pie',
             data: {
                 labels: newLabels,
@@ -139,7 +141,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 acc[date].extraviada += 1;
             }
             acc[date].total += 1;
-            console.log(acc)
             return acc;
         }, {});
 
@@ -157,24 +158,53 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    document.getElementById('consultarButton').addEventListener('click', async () => {
+        const datosEstudiante = document.getElementById('datosEstudianteInput').value;
+        const codigoPertenencia = document.getElementById('codigoPertenenciaInput').value;
+        const estadoRegistros = document.getElementById('estadoRegistrosSelect').value;
+
+        const filters = {
+            datosEstudiante,
+            estadoRegistros,
+            codigoPertenencia
+        };
+
+        await loadChartsAndTables(filters);
+    });
+
     function loadAllRecordsTable(registros) {
         const tbody = document.querySelector('#allRecordsTable tbody');
         tbody.innerHTML = '';  // Clear existing rows
-
         registros.forEach(item => {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${item.id_registro}</td>
-                <td>${item.id_estudiante}</td>
-                <td>${item.id_objeto}</td>
                 <td>${item.estado}</td>
-                <td>${item.hora_entrada}</td>
-                <td>${item.nombre_objeto}</td>
+                <td>${formatDate(item.hora_entrada)}</td>
+                <td>${formatTime(item.hora_entrada)}</td>
+                <td>${formatTime(item.hora_salida)}</td>
+                <td>${item.id_estudiante}</td>
                 <td>${item.nombres_estudiante}</td>
-                <td><img src="${item.imagen_pertenencia}" alt="Imagen Pertenencia" width="50" loading="lazy" ></td>
+                <td>${item.codigo_pertenencia}</td>
+                <td>${item.nombre_objeto}</td>
+                <td><img src="${item.imagen_pertenencia}" alt="Imagen Pertenencia" width="50" loading="lazy"></td>
             `;
             tbody.appendChild(row);
         });
+        function formatDate(dateTimeString) {
+            var dateTimeParts = dateTimeString.split('_');
+            var datePart = dateTimeParts[0].replace(/-/g, '/');
+            return new Date(datePart).toLocaleDateString('es-ES');
+        }
+
+        function formatTime(dateTimeString) {
+            if (!dateTimeString || dateTimeString.trim() === '') {
+                return 'SIN REGISTRO'; // Devuelve una cadena vacía si dateTimeString es nulo, indefinido o vacío
+            }
+            var dateTimeParts = dateTimeString.split('_');
+            var timePart = dateTimeParts[1].replace(/-/g, ':');
+            return timePart;
+        }
     }
 
     async function downloadPagePdf() {
@@ -189,14 +219,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
         html2pdf().set(opt).from(element).save();
     }
+
     document.getElementById('downloadPagePdf').addEventListener('click', downloadPagePdf);
 
-
-    
     loadChartsAndTables();
 });
 
 async function fetchExcelFile() {
-    const href = API_URL + "/pertenencia/generar-excel";
+    const href = `${API_URL}/pertenencia/generar-excel`;
     window.open(href, "_blank");
 }

@@ -18,25 +18,26 @@
         <span class="username">GENERAR REPORTE</span>
         <button class="btn btn-secondary" id="menuBtn" onclick="menu()"> <i class="fa-solid fa-bars"></i> Menu</button>
     </div>
-    <div>
+    <div class="btn-toolbar">
         <button id="downloadPagePdf" class="btn btn-primary">Descargar PDF <i class="fa-solid fa-file-pdf"></i></button>
-        <button class="btn btn-success" onclick="fetchExcelFile()">Descargar Excel <i class="fa-solid fa-file-excel"></i></button>
+        <button class="btn btn-success" onclick="fetchExcelFile()">Descargar Excel <i
+                class="fa-solid fa-file-excel"></i></button>
     </div>
     <main id="main">
         <section>
-            <h2>Pertenencias por Tipo de Objeto</h2>
+            <h2>Pertenencias Actuales por Tipo de Objeto</h2>
             <div class="chart-container">
                 <canvas id="objectTypeChart"></canvas>
             </div>
         </section>
         <section>
-            <h2>Estado de Pertenencias (Ingresada, Salida, Extraviada)</h2>
+            <h2>Estado Actual de las Pertenencias (Ingresada, Salida, Extraviada)</h2>
             <div class="chart-container">
                 <canvas id="statusPieChart"></canvas>
             </div>
         </section>
         <section>
-            <h2>Resumen de Registros</h2>
+            <h2>Resumen de Registros de Pertenencia Por Fecha</h2>
             <div class="table-container">
                 <table>
                     <thead>
@@ -45,7 +46,7 @@
                             <th>Objetos Ingresados</th>
                             <th>Objetos Salidos</th>
                             <th>Objetos Extraviados</th>
-                            <th>Total de Obejtos</th>
+                            <th>Total de Objetos</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -53,19 +54,58 @@
                 </table>
             </div>
         </section>
+        <section class="container mt-5">
+            <h2 class="mb-4">Filtros de búsqueda</h2>
+            <div class="card p-4 shadow-sm">
+                <div class="row g-3 align-items-center">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="datosEstudianteInput" class="form-label">Datos del Estudiante</label>
+                            <input type="text" class="form-control" id="datosEstudianteInput"
+                                placeholder="Ingresar Datos del Estudiante">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="codigoPertenenciaInput" class="form-label">Código de Pertenencia</label>
+                            <input type="text" class="form-control" id="codigoPertenenciaInput"
+                                placeholder="Ingresar Código de Pertenencia">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="estadoRegistrosSelect" class="form-label">Estado de los Registros</label>
+                            <select class="form-select" id="estadoRegistrosSelect">
+                                <option value="">-- SELECCIONAR ESTADO --</option>
+                                <option value="Ingresada">Ingresada</option>
+                                <option value="Salida">Salida</option>
+                                <option value="Extraviada">Extraviada</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-center d-flex align-items-end">
+                        <button id="consultarButton" class="btn btn-primary w-100">Consultar</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
         <section>
-            <h2>Todos los Registros</h2>
+            <h2>Todos los Registros de las Pertenencias</h2>
             <div class="table-container">
                 <table id="allRecordsTable">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>ID Estudiante</th>
-                            <th>ID Objeto</th>
+                            <th>Registro</th>
                             <th>Estado</th>
                             <th>Fecha</th>
-                            <th>Nombre Objeto</th>
+                            <th>Hora de Ingreso</th>
+                            <th>Hora de Salida</th>
+                            <th>ID Estudiante</th>
                             <th>Nombres Estudiante</th>
+                            <th>Cod Pertenencia</th>
+                            <th>Nombre Objeto</th>
                             <th>Imagen</th>
                         </tr>
                     </thead>
@@ -75,9 +115,6 @@
             </div>
         </section>
     </main>
-    <footer>
-        <p>IntelliGuard</p>
-    </footer>
     <script src="../utils/sessionManager.js"></script>
     <script src="../utils/config.js"></script>
     <script src="../utils/util.js"></script>

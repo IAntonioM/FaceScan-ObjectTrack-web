@@ -19,11 +19,18 @@
         <button class="btn btn-secondary" id="menuBtn" onclick="menu()"> <i class="fa-solid fa-bars"></i> Menu</button>
     </div>
     <div class="btn-toolbar">
-        <button id="downloadPagePdf" class="btn btn-primary">Descargar PDF <i class="fa-solid fa-file-pdf"></i></button>
-        <button class="btn btn-success" onclick="fetchExcelFile()">Descargar Excel <i
-                class="fa-solid fa-file-excel"></i></button>
+
+        <button id="downloadPagePdf" class="btn btn-primary">
+            Descargar PDF <i class="fa-solid fa-file-pdf"></i>
+        </button>
+
+        <button class="btn btn-success" onclick="fetchExcelFile()">
+            Descargar Excel <iclass="fa-solid fa-file-excel"></i>
+        </button>
     </div>
     <main id="main">
+
+
         <section>
             <h2>Pertenencias Actuales por Tipo de Objeto</h2>
             <div class="chart-container">
@@ -36,6 +43,9 @@
                 <canvas id="statusPieChart"></canvas>
             </div>
         </section>
+
+
+
         <section>
             <h2>Resumen de Registros de Pertenencia Por Fecha</h2>
             <div class="table-container">
@@ -89,8 +99,6 @@
                 </div>
             </div>
         </section>
-
-
         <section>
             <h2>Todos los Registros de las Pertenencias</h2>
             <div class="table-container">
@@ -114,6 +122,7 @@
                 </table>
             </div>
         </section>
+
     </main>
     <script src="../utils/sessionManager.js"></script>
     <script src="../utils/config.js"></script>

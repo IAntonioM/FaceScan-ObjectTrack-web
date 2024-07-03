@@ -2,18 +2,20 @@ document.addEventListener('DOMContentLoaded', function() {
     let objectTypeChart;
     let statusPieChart;
 
-    async function loadChartsAndTables(filters = {}) {
-        const data = await fetchData('consulta-reporte', 'POST', filters);
+    async function loadChartsAndTables(filters = {}, loadAll = true) {
+        const data = await fetchData('POST', filters);
         if (data && data.pertenencias) {
-            if (objectTypeChart) {
-                objectTypeChart.destroy();
+            if (loadAll) {
+                if (objectTypeChart) {
+                    objectTypeChart.destroy();
+                }
+                if (statusPieChart) {
+                    statusPieChart.destroy();
+                }
+                loadObjectTypeChart(data.pertenencias);
+                loadStatusPieChart(data.pertenencias);
+                loadSummaryTable(data.registros);
             }
-            if (statusPieChart) {
-                statusPieChart.destroy();
-            }
-            loadObjectTypeChart(data.pertenencias);
-            loadStatusPieChart(data.pertenencias);
-            loadSummaryTable(data.registros);
             loadAllRecordsTable(data.registros);
         }
     }
@@ -26,10 +28,10 @@ document.addEventListener('DOMContentLoaded', function() {
         return formData;
     }
 
-    async function fetchData(endpoint, method = 'POST', filters = {}) {
+    async function fetchData(method = 'POST', filters = {}) {
         const formData = crearDataFormulario(filters);
         const token = getCookie('jwt');
-        const response = await fetch(`${API_URL}/pertenencia/${endpoint}`, {
+        const response = await fetch(`${API_URL}/pertenencia/consulta-reporte`, {
             method: method,
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -45,9 +47,12 @@ document.addEventListener('DOMContentLoaded', function() {
             acc[item.nombre_objeto] = (acc[item.nombre_objeto] || 0) + 1;
             return acc;
         }, {});
+        
         const labels = Object.keys(objectTypeData);
         const values = Object.values(objectTypeData);
-
+        const backgroundColors = labels.map((label, index) => `rgba(${index * 50 % 255}, ${index * 100 % 255}, ${index * 150 % 255}, 0.2)`);
+        const borderColors = labels.map((label, index) => `rgba(${index * 50 % 255}, ${index * 100 % 255}, ${index * 150 % 255}, 1)`);
+    
         const ctx = document.getElementById('objectTypeChart').getContext('2d');
         objectTypeChart = new Chart(ctx, {
             type: 'bar',
@@ -56,8 +61,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 datasets: [{
                     label: 'Número de objetos registrados de este Tipo',
                     data: values,
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: backgroundColors,
+                    borderColor: borderColors,
                     borderWidth: 1
                 }]
             },
@@ -70,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-
+    
     function loadStatusPieChart(pertenencias) {
         let statusData = {
             Ingresado: 0,
@@ -113,12 +118,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }]
             },
             options: {
-                responsive: true,
-                scales: {
-                    x: {
-                        beginAtZero: true,
-                    }
-                }
+                responsive: true
             }
         });
     }
@@ -169,7 +169,7 @@ document.addEventListener('DOMContentLoaded', function() {
             codigoPertenencia
         };
 
-        await loadChartsAndTables(filters);
+        await loadChartsAndTables(filters, false); // Solo carga la última tabla
     });
 
     function loadAllRecordsTable(registros) {
@@ -222,10 +222,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     document.getElementById('downloadPagePdf').addEventListener('click', downloadPagePdf);
 
-    loadChartsAndTables();
+    loadChartsAndTables(); // Carga todo inicialmente
 });
 
 async function fetchExcelFile() {
     const href = `${API_URL}/pertenencia/generar-excel`;
     window.open(href, "_blank");
 }
+

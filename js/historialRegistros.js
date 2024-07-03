@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', function() {
   init();
 
   function init() {
-    consultarRegistrosPertenencias(searchText);
     searchBtn.addEventListener('click', buscarRegistros);
   }
 
@@ -16,6 +15,8 @@ document.addEventListener('DOMContentLoaded', function() {
     searchText = searchInput.value;
     consultarRegistrosPertenencias(searchText);
   }
+
+  consultarRegistrosPertenencias(searchText);
 
   function consultarRegistrosPertenencias(searchText) {
     mostrarSpinner(true);
@@ -26,9 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
       headers: createHeaders(),
       body: formData
     })
-    .then(data => {
-      return handleResponse(data);
-    })
+    .then(data => handleResponse(data))
     .then(data => {     
       mostrarDatosDeRegistro(data);
       mostrarSpinner(false);
@@ -77,90 +76,42 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function mostrarDatosDeRegistro(data) {
-    console.log(data.pertenencias);
     const pertenencias = data.pertenencias || [];
-    registrosContainer.innerHTML = ''; // Limpiar contenido anterior
-
+    registrosContainer.innerHTML = '';
     if (pertenencias.length === 0) {
       mostrarConsultaVacia({ error: 'No se encontraron resultados' });
     } else {
       pertenencias.forEach(registro => {
-        const card = createRegistroCard(registro);
-        registrosContainer.appendChild(card);
+        registrosContainer.innerHTML += `
+      <div class="col mb-4">
+        <div class="card h-100 registro-item">
+          <img src="${registro.imagen_pertenencia}" alt="${registro.nombre_objeto}" class="card-img-top" loading="lazy">
+          <div class="card-body">
+            <h5 class="card-title">Estudiante: ${registro.nombres_estudiante}</h5>
+            <p class="card-text">
+              Código Pertenencia: ${registro.codigo_pertenencia}<br>
+              Objeto: <span class="objeto">${registro.nombre_objeto}</span><br>
+              Carrera Estudiante: ${registro.carrera_estudiante}<br>
+              Plan Estudiante: ${registro.plan_estudiante}
+            </p>
+          </div>
+          <div class="card-footer">
+            <small class="text-muted">Datos de la Ultima Actividad</small><br>
+            ${crearFooterSpan('Estado', registro.nombre_estado)}
+            <br>
+            ${crearFooterSpan('Fecha', convertirFechaTexto(registro.hora_ultima_actividad,
+                { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }))}
+            <br>
+            ${crearFooterSpan('Hora', convertirFechaTexto(registro.hora_ultima_actividad,
+                { hour: 'numeric', minute: 'numeric', second: 'numeric' }))}
+          </div>
+        </div>
+      </div>`
       });
     }
   }
 
-  function createRegistroCard(registro) {
-    const col = document.createElement('div');
-    col.classList.add('col', 'mb-4');
-
-    const card = document.createElement('div');
-    card.classList.add('card', 'h-100', 'registro-item');
-
-    const img = document.createElement('img');
-    img.src = registro.imagen_pertenencia;
-    img.alt = registro.nombre_objeto;
-    img.classList.add('card-img-top');
-    img.loading = 'lazy'; 
-
-    const cardBody = createCardBody(registro);
-    const cardFooter = createCardFooter(registro);
-
-    card.appendChild(img);
-    card.appendChild(cardBody);
-    card.appendChild(cardFooter);
-
-    col.appendChild(card);
-    return col;
-  }
-
-  function createCardBody(registro) {
-    const cardBody = document.createElement('div');
-    cardBody.classList.add('card-body');
-
-    const cardTitle = document.createElement('h5');
-    cardTitle.classList.add('card-title');
-    cardTitle.textContent = `Estudiante: ${registro.nombres_estudiante}`;
-
-    const cardText = document.createElement('p');
-    cardText.classList.add('card-text');
-    cardText.innerHTML = `
-      Código Pertenencia: ${registro.codigo_pertenencia}<br>
-      Objeto: <span class="objeto">${registro.nombre_objeto}</span><br>
-      Carrera Estudiante: ${registro.carrera_estudiante}<br>
-      Plan Estudiante: ${registro.plan_estudiante}
-    `;
-
-    cardBody.appendChild(cardTitle);
-    cardBody.appendChild(cardText);
-
-    return cardBody;
-  }
-
-  function createCardFooter(registro) {
-    const cardFooter = document.createElement('div');
-    cardFooter.classList.add('card-footer');
-    const UltimaActividad = createFooterSpan('Datos', " De la Ultima Actividad");
-    const estadoSpan = createFooterSpan('Estado', registro.nombre_estado);
-    const fechaSpan = createFooterSpan('Fecha', convertirFechaTexto(registro.hora_ultima_actividad, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }));
-    const horaSpan = createFooterSpan('Hora', convertirFechaTexto(registro.hora_ultima_actividad, { hour: 'numeric', minute: 'numeric', second: 'numeric' }));
-    cardFooter.appendChild(UltimaActividad)
-    cardFooter.appendChild(document.createElement('br'));
-    cardFooter.appendChild(estadoSpan);
-    cardFooter.appendChild(document.createElement('br'));
-    cardFooter.appendChild(fechaSpan);
-    cardFooter.appendChild(document.createElement('br'));
-    cardFooter.appendChild(horaSpan);
-
-    return cardFooter;
-  }
-
-  function createFooterSpan(label, value) {
-    const span = document.createElement('small');
-    span.classList.add('text-muted');
-
-    // Asigna una clase basada en el estado
+  function crearFooterSpan(label, value) {
     let estadoClass = '';
     switch(value) {
       case 'Salida':
@@ -174,8 +125,7 @@ document.addEventListener('DOMContentLoaded', function() {
         break;
     }
 
-    span.innerHTML = `${label}: <span class="${label.toLowerCase()} ${estadoClass}">${value}</span>`;
-    return span;
+    return `<small class="text-muted">${label}: <span class="${label.toLowerCase()} ${estadoClass}">${value}</span></small>`;
   }
 
   function convertirFechaTexto(fecha, opciones) {

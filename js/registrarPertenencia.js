@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         }else{
             fetchRegistrarPertenencia(formData)
-                .then(data => mostrarIconoResultado(true, data.message))
+                .then(data => mostrarIconoResultado(true, "Se registro la Entrada de pertenencia exitosamente"))
                 .catch(error => handleErrorResponse(error));
 
         }

@@ -86,10 +86,8 @@ document.addEventListener('DOMContentLoaded', function() {
             if (item.id_estado === 1) {
                 statusData.Ingresado += 1;
             } else if (item.id_estado === 2) {
-                statusData.Ingresado += 1;
                 statusData.Salida += 1;
             } else if (item.id_estado === 3) {
-                statusData.Ingresado += 1;
                 statusData.Extraviado += 1;
             }
         });

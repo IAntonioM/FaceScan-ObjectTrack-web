@@ -110,12 +110,6 @@ body {
     margin-right: 2px;
 }
 
-.pertenencia-img {
-    width: 220px;
-    height: 400px;
-    object-fit: cover;
-    border-radius: 8px;
-}
 
 .pertenencia-info {
     padding: 16px;

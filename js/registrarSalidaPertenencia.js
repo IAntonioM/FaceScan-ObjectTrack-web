@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', function() {
             pertenenciaDiv.innerHTML = `
                 <div class="checkbox-container">
                     <input type="checkbox" class="select-pertenencia" checked>
-                    <img src="${pertenencia.imagen_pertenencia}" alt="Imagen de la Pertenencia" class="pertenencia-img">
+                    <img src="${pertenencia.imagen_pertenencia}" alt="Imagen de la Pertenencia" class="pertenencia-img" style="width: 200px;">
                 </div>
                 <div class="pertenencia-info">
                     <h4>C. Pertenencia : ${pertenencia.codigo_pertenencia}</h4>

@@ -121,19 +121,33 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="info-value">${data.estudiante.planEstudiante}</div></div>`;
         }
         if (data.objeto) {
-            content += `
-                <div class="info-row">
-                    <div class="info-label">Codigo Pertenencia</div>
-                    <div class="info-value">${data.objeto.codigoPertenencia}</div></div><div class="info-row">
-                    <div class="info-label">Objeto:</div>
-                    <div class="info-value">${data.objeto.objeto}</div></div><div class="info-row">
-                    <div class="info-label">Ultima Fecha Actividad:</div>
-                    <div class="info-value">${data.objeto.fechaUltimaActividad}</div></div><div class="info-row">
-                    <div class="info-label">Ultimo Estado:</div>
-                    <div class="info-value">${data.objeto.ultimoEstado}</div></div><div class="info-row">
-                    <div class="info-label">Imagen:</div>
-                    <div class="info-value"><img src="${data.objeto.imgUri}" alt="${data.objeto.objeto}" class="objeto-img"></div>
-                </div>`;
+            if(data.objeto.ultimoEstado){
+                content += `
+                    <div class="info-row">
+                        <div class="info-label">Codigo Pertenencia</div>
+                        <div class="info-value">${data.objeto.codigoPertenencia}</div></div><div class="info-row">
+                        <div class="info-label">Objeto:</div>
+                        <div class="info-value">${data.objeto.objeto}</div></div><div class="info-row">
+                        <div class="info-label">Ultima Fecha Actividad:</div>
+                        <div class="info-value">${data.objeto.fechaUltimaActividad}</div></div><div class="info-row">
+                        <div class="info-label">Ultimo Estado:</div>
+                        <div class="info-value">${data.objeto.ultimoEstado}</div></div><div class="info-row">
+                        <div class="info-label">Imagen:</div>
+                        <div class="info-value"><img src="${data.objeto.imgUri}" alt="${data.objeto.objeto}" class="objeto-img"></div>
+                    </div>`;
+
+            }else{
+                content += `
+                    <div class="info-row">
+                        <div class="info-label">Nueva Pertenencia Registrada!!!</div>
+                        <div class="info-label">Objeto:</div>
+                        <div class="info-value">${data.objeto.objeto}</div></div><div class="info-row">
+                        <div class="info-label">Imagen:</div>
+                        <div class="info-value"><img src="${data.objeto.imgUri}" alt="${data.objeto.objeto}" class="objeto-img"></div>
+                    </div>`;
+
+            }
+
         }
         registroInfo.innerHTML = content;
     }

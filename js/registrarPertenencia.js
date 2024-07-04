@@ -139,8 +139,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }else{
                 content += `
                     <div class="info-row">
-                        <div class="info-label">Nueva Pertenencia Registrada!!!</div>
-                        <div class="info-label">Objeto:</div>
+                        <div class="info-label">Nueva Pertenencia Registrada!!!</div><br>
+                        <div class="info-label">Objeto:</div><br>
                         <div class="info-value">${data.objeto.objeto}</div></div><div class="info-row">
                         <div class="info-label">Imagen:</div>
                         <div class="info-value"><img src="${data.objeto.imgUri}" alt="${data.objeto.objeto}" class="objeto-img"></div>

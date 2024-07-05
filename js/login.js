@@ -2,7 +2,7 @@
 function login() {
     var username = document.getElementById('username').value;
     var password = document.getElementById('password').value;
-    fetch(API_URL+'/login', {
+    fetch(API_URL+'/login/personal', {
         method: 'POST',
         headers: {
         'Content-Type': 'application/json'
@@ -24,3 +24,4 @@ function login() {
         document.getElementById('error-message').style.display = 'block';
     });
 }
+

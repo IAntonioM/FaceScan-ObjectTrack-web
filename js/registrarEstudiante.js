@@ -5,6 +5,10 @@ const stopRecordingBtn = document.getElementById('stopRecordingBtn');
 const captureBtn = document.getElementById('captureBtn');
 const codigoEstudianteInput = document.getElementById('codigoEstudiante');
 const nombreCompletoInput = document.getElementById('NombreCompleto');
+
+const carreraEstudiante = document.getElementById('Carrera');
+const planEstudiante = document.getElementById('PlanEstudiante');
+
 const recordingIndicator = document.getElementById('recordingIndicator');
 const recordingTime = document.getElementById('recordingTime');
 const loadingSpinner = document.getElementById('loading');
@@ -78,6 +82,9 @@ function sendVideo() {
   formData.append('file', videoFile);
   formData.append('codigoEstudiante', codigoEstudianteInput.value);
   formData.append('NombreCompleto', nombreCompletoInput.value);
+  formData.append('carrera', carreraEstudiante.value);
+  formData.append('planEstudiante', planEstudiante.value);
+
 
   fetch(API_URL+'/estudiante/reconocimiento-facial/video', {
     method: 'POST',

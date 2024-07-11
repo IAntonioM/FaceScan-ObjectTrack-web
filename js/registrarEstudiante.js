@@ -45,8 +45,9 @@ function startRecording() {
           recordedChunks.push(event.data);
         }
       };
-
       mediaRecorder.start();
+
+
       startRecordingBtn.style.display = 'none';
       stopRecordingBtn.style.display = 'inline-block';
       captureBtn.style.display = 'none';
@@ -73,7 +74,7 @@ function stopRecording() {
 // Función para enviar el video grabado
 function sendVideo() {
   FormularioVideoDiv.style.display = 'none';
-  SpinnerDeCargaDiv.style.display = 'block'; // Mostrar spinner de carga
+  SpinnerDeCargaDiv.style.display = 'block';
 
   const videoBlob = new Blob(recordedChunks, { type: 'video/webm' });
   const videoFile = new File([videoBlob], 'video.webm', { type: 'video/webm' });
@@ -89,13 +90,12 @@ function sendVideo() {
   fetch(API_URL+'/estudiante/reconocimiento-facial/video', {
     method: 'POST',
     headers: {
-      'Authorization': 'Bearer ' + getCookie('jwt'), // Reemplaza 'tuTokenJWT' con tu token JWT
+      'Authorization': 'Bearer ' + getCookie('jwt'), 
     },
     body: formData
   })
     .then(response => {
-      loadingSpinner.style.display = 'none'; // Ocultar spinner de carga
-      handleUnauthorized(response)
+      loadingSpinner.style.display = 'none'; 
       if (!response.ok) {
         throw new Error('Error en la solicitud', response);
       }
